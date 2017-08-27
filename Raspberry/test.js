@@ -17,6 +17,11 @@ var con = mysql.createConnection({
 
 device.setAddress(0x8);
 
+con.connect(function(err) {
+	if(err) console.log("Erreur de connection");
+	else	console.log("Connected!");
+}
+
 function handleTimeout(){
 	setTimeout(function() { handleRead(); }, 1000 );
 }
@@ -29,18 +34,23 @@ function handleRead(){
 	if(min%2==0 && askdata==0){
 		console.log("Je lis des données");
 		devices[0].readBytes(null,17,function(err,res){
-			getdatas = res.toString('ascii');
-			console.log(getdatas);
-			getdatas = getdatas.split(";");
-			humi = getdatas[0];
-			addInBDD('HU',humi);
-			temp = getdatas[1];
-			addInBDD('TE',temp);
-			mois = getdatas[2];
-			addInBDD('MO',mois);
-			console.log("h=" + humi + ", t=" + temp + ", m=" + mois);
+			if(err) console.log("Erreur de lecture Arduino");
+			else{
+				getdatas = res.toString('ascii');
+				console.log(getdatas);
+				getdatas = getdatas.split(";");
+				humi = getdatas[0];
+				addInBDD('HU',humi);
+				temp = getdatas[1];
+				addInBDD('TE',temp);
+				mois = getdatas[2];
+				addInBDD('MO',mois);
+				console.log("h=" + humi + ", t=" + temp + ", m=" + mois);
+			}
 		});
-		devices[0].writeByte(0x1,function(err) {});
+		devices[0].writeByte(0x1,function(err) {
+			if(err) console.log(err);
+		});
 
 		askdata = 1;
 	}
@@ -50,7 +60,6 @@ function handleRead(){
 
 	handleTimeout();
 }
-
 
 function getDateMin(){
 	min = (min < 10 ? "0" : "") + min;
@@ -63,13 +72,11 @@ function getDateSec(){
 }
 
 function addInBDD(id,value) {
-	con.connect(function(err) {
-  	console.log("Connected!" + id + ", " + value);
-  	var sql = "INSERT INTO donnees (typecapteur, valeur) VALUES ('" + id + "'," + value +");";
-		console.log(sql);
-  	con.query(sql, function (err, result) {
-    	console.log("1 record inserted");
-  	});
-	});
+  var sql = "INSERT INTO donnees (typecapteur, valeur) VALUES ('" + id + "'," + value +");";
+  con.query(sql, function (err, result) {
+		if(err) console.log(err);
+		else console.log("1 record inserted");
+  });
 }
+
 handleTimeout();
