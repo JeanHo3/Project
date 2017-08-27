@@ -20,7 +20,7 @@ device.setAddress(0x8);
 con.connect(function(err) {
 	if(err) console.log("Erreur de connection");
 	else	console.log("Connected!");
-}
+});
 
 function handleTimeout(){
 	setTimeout(function() { handleRead(); }, 1000 );
