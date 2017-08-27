@@ -65,7 +65,7 @@ function getDateSec(){
 function addInBDD(id,value) {
 	con.connect(function(err) {
   	console.log("Connected!" + id + ", " + value);
-  	var sql = "INSERT INTO donnees (typecapteur, valeur) VALUES (" + id + "," + value +");";
+  	var sql = "INSERT INTO donnees (typecapteur, valeur) VALUES (''" + id + "''," + value +");";
 		console.log(sql);
   	con.query(sql, function (err, result) {
     	console.log("1 record inserted");
