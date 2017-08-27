@@ -4,7 +4,7 @@ var device = new i2c(address, {device: '/dev/i2c-1'});
 var devices = [device];
 var getdatas;
 var humi;
-var temp;
+var temp = 0.00;
 var mois;
 var askdata = 0;
 var mysql = require('mysql');
