@@ -67,9 +67,11 @@ public class Fenetre extends JFrame {
 
 	public void initialize1() {
 		execAction();
+
 		for(int i=0;i<synoptiques.size();i++) {
 			syno.addItem(synoptiques.get(i).getName().toString());
 		}
+
 		syno.addActionListener(new SynoAction());
 		syno.setSelectedItem(1);
 		getSymboles();
