@@ -51,6 +51,7 @@ function handleRead(){
 	handleTimeout();
 }
 
+
 function getDateMin(){
 	min = (min < 10 ? "0" : "") + min;
 	return min;
