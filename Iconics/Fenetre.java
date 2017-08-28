@@ -1,7 +1,12 @@
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
@@ -124,14 +129,16 @@ public class Fenetre extends JFrame {
 		for(int i=0;i<proprietes.size();i++) {
 			prop.add(new JTextField(proprietes.get(i).getValue().toString()));
 			prop.get(i).setEnabled(false);
+			prop.get(i).setDisabledTextColor(Color.BLACK);
 			panprop.add(prop.get(i));
 			prop1.add(new JTextField(proprietes.get(i).getName().toString()));
 			prop1.get(i).setEnabled(false);
+			prop1.get(i).setDisabledTextColor(Color.BLACK);
 			panprop1.add(prop1.get(i));
 		}
-		panprop.setMinimumSize(new Dimension(600,proprietes.size()*30));
+		panprop.setPreferredSize(new Dimension(600,proprietes.size()*20));
 		panprop.setLayout(new BoxLayout(panprop,BoxLayout.PAGE_AXIS));
-		panprop1.setMinimumSize(new Dimension(200,proprietes.size()*30));
+		panprop1.setPreferredSize(new Dimension(200,proprietes.size()*20));
 		panprop1.setLayout(new BoxLayout(panprop1,BoxLayout.PAGE_AXIS));
 		panpropt.add(panprop1);
 		panpropt.add(panprop);
@@ -146,7 +153,7 @@ public class Fenetre extends JFrame {
 			synoptiques.add(new Synoptique(file11.getName().substring(0, file11.getName().toString().length() - 5),file11.getAbsolutePath()));
 		}
 		for (int i = 0;i<synoptiques.size();i++){
-			textexec.addItem("Recherche des smarts symboles du synoptique " + synoptiques.get(i).getName());
+			textexec.append("Recherche des smarts symboles du synoptique " + synoptiques.get(i).getName());
 			synoptiques.get(i).findSmartSymbols(textexec);
 		}
 	}
@@ -190,10 +197,13 @@ public class Fenetre extends JFrame {
 
 	class VisuAction implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
+			JPanel pantemp = new JPanel();
+			pantemp.setPreferredSize(new Dimension(800,200));
 			System.out.println("t");
 			pan.setLayout(new BoxLayout(pan,BoxLayout.PAGE_AXIS));
 			pan.add(pansyno);
 			pan.add(pansymb);
+			pan.add(pantemp);
 			pan.add(panpropt);
 			panPrin.add(pan);
 			panPrin.repaint();

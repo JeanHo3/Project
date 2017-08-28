@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JTextArea;
+
 public class Synoptique {
 	private String name;
 	private String path;
@@ -69,11 +71,11 @@ public class Synoptique {
 	public List<SmartSymbol> getListeSS(){
 		return this.smartSymbolsIn;
 	}
-
+	
 	public int getNbSSIn() {
 		return this.nbSmartSymbolsIn;
 	}
-
+	
 	public void descriptionComplete(BufferedWriter bw) {
 		try {
 			getNbTagsIn();
@@ -99,7 +101,7 @@ public class Synoptique {
 		}
 	}
 
-	public void findSmartSymbols(JTextArea textexec) {
+	public void findSmartSymbols(JTextArea textarea) {
 		try{
 			String mnemo = "";
 			String API = "";
