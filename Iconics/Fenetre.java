@@ -146,7 +146,8 @@ public class Fenetre extends JFrame {
 			synoptiques.add(new Synoptique(file11.getName().substring(0, file11.getName().toString().length() - 5),file11.getAbsolutePath()));
 		}
 		for (int i = 0;i<synoptiques.size();i++){
-			synoptiques.get(i).findSmartSymbols();
+			textexec.addItem("Recherche des smarts symboles du synoptique " + synoptiques.get(i).getName());
+			synoptiques.get(i).findSmartSymbols(textexec);
 		}
 	}
 

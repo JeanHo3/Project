@@ -69,11 +69,11 @@ public class Synoptique {
 	public List<SmartSymbol> getListeSS(){
 		return this.smartSymbolsIn;
 	}
-	
+
 	public int getNbSSIn() {
 		return this.nbSmartSymbolsIn;
 	}
-	
+
 	public void descriptionComplete(BufferedWriter bw) {
 		try {
 			getNbTagsIn();
@@ -99,7 +99,7 @@ public class Synoptique {
 		}
 	}
 
-	public void findSmartSymbols() {
+	public void findSmartSymbols(JTextArea textexec) {
 		try{
 			String mnemo = "";
 			String API = "";
