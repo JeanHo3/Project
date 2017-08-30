@@ -1,12 +1,8 @@
-import java.awt.Color;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
@@ -32,6 +28,7 @@ public class Fenetre extends JFrame {
 	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	private double width = screenSize.getWidth();
 	private double height = screenSize.getHeight();
+	private int itemnav = 0;
 
 	String cheminSource = "/Users/jeanhourmant/Dropbox/Work_30072017/Fichiers/Source/";
 	String cheminDestination = "/Users/jeanhourmant/Dropbox/Work_30072017/Fichiers/Destination/";
@@ -50,6 +47,7 @@ public class Fenetre extends JFrame {
 	private JPanel pansymb = new JPanel();
 	private JPanel panprop = new JPanel();
 	private JPanel panprop1 = new JPanel();
+	private JPanel panprop2 = new JPanel();
 	private JPanel panpropt = new JPanel();
 
 	private JPanel panexec = new JPanel();
@@ -61,6 +59,7 @@ public class Fenetre extends JFrame {
 	private JComboBox<String> symb = new JComboBox<String>();
 	private List<JTextField> prop = new ArrayList<JTextField>();
 	private List<JTextField> prop1 = new ArrayList<JTextField>();
+	private List<JTextField> prop2 = new ArrayList<JTextField>();
 	private JTextArea textexec = new JTextArea();
 
 	public Fenetre() {
@@ -76,7 +75,7 @@ public class Fenetre extends JFrame {
 		for(int i=0;i<synoptiques.size();i++) {
 			syno.addItem(synoptiques.get(i).getName().toString());
 		}
-
+		itemnav=1;
 		syno.addActionListener(new SynoAction());
 		syno.setSelectedItem(1);
 		getSymboles();
@@ -99,6 +98,7 @@ public class Fenetre extends JFrame {
 		menu1.add(item2);
 		item2.addActionListener(new ExecAction());
 		menu1.add(item3);
+		item3.addActionListener(new RempAction());
 		menuBar.add(menu1);
 
 		this.setJMenuBar(menuBar);
@@ -112,49 +112,99 @@ public class Fenetre extends JFrame {
 		prop.clear();
 		panprop1.removeAll();
 		prop1.clear();
+		panprop2.removeAll();
+		panpropt.removeAll();
+		prop2.clear();
 		symb.removeAllItems();
 		symboles = synoptiques.get(syno.getSelectedIndex()).getListeSS();
 		for(int i=0;i<symboles.size();i++) {
 			symb.addItem(symboles.get(i).getKeyword() + " - " + symboles.get(i).getName().toString());
 		}
 		pan.repaint();
+		if (itemnav == 3) rempAction();
+		if (itemnav == 1) getProperties();
 	}
 
 	private void getProperties() {
-		panprop.removeAll();
-		panprop1.removeAll();
-		prop.clear();
-		prop1.clear();
-		proprietes = symboles.get(symb.getSelectedIndex()).getListProperty();
-		for(int i=0;i<proprietes.size();i++) {
-			prop.add(new JTextField(proprietes.get(i).getValue().toString()));
-			prop.get(i).setEnabled(false);
-			prop.get(i).setDisabledTextColor(Color.BLACK);
-			panprop.add(prop.get(i));
-			prop1.add(new JTextField(proprietes.get(i).getName().toString()));
-			prop1.get(i).setEnabled(false);
-			prop1.get(i).setDisabledTextColor(Color.BLACK);
-			panprop1.add(prop1.get(i));
+		if(itemnav == 1) {
+			pan.setVisible(true);
+			panprop.removeAll();
+			panprop1.removeAll();
+			panprop2.removeAll();
+			panpropt.removeAll();
+			prop.clear();
+			prop1.clear();
+			prop2.clear();
+			proprietes = symboles.get(symb.getSelectedIndex()).getListProperty();
+			prop1.add(new JTextField("Tag associé :"));
+			prop.add(new JTextField(symboles.get(symb.getSelectedIndex()).getAssociatedTag()));
+			for(int i=0;i<proprietes.size();i++) {
+				prop.add(new JTextField(proprietes.get(i).getValue().toString()));
+				prop.get(i).setEnabled(false);
+				panprop.add(prop.get(i));
+				prop1.add(new JTextField(proprietes.get(i).getName().toString()));
+				prop1.get(i).setEnabled(false);
+				panprop1.add(prop1.get(i));
+			}
+			prop.get(0).setEnabled(true);
+			panprop.setMinimumSize(new Dimension(600,proprietes.size()*30));
+			panprop.setLayout(new BoxLayout(panprop,BoxLayout.PAGE_AXIS));
+			panprop1.setMinimumSize(new Dimension(200,proprietes.size()*30));
+			panprop1.setLayout(new BoxLayout(panprop1,BoxLayout.PAGE_AXIS));
+			panpropt.add(panprop1);
+			panpropt.add(panprop);
+			pan.repaint();
+			pan.revalidate();
 		}
-		panprop.setPreferredSize(new Dimension(600,proprietes.size()*20));
-		panprop.setLayout(new BoxLayout(panprop,BoxLayout.PAGE_AXIS));
-		panprop1.setPreferredSize(new Dimension(200,proprietes.size()*20));
-		panprop1.setLayout(new BoxLayout(panprop1,BoxLayout.PAGE_AXIS));
-		panpropt.add(panprop1);
-		panpropt.add(panprop);
-		pan.repaint();
-		pan.revalidate();
+	}
+
+	private void rempAction() {
+		if (itemnav == 3) {
+			pan.setVisible(true);
+			pansymb.setVisible(false);
+			panprop.removeAll();
+			panprop1.removeAll();
+			panprop2.removeAll();
+			panpropt.removeAll();
+			prop.clear();
+			prop1.clear();
+			prop2.clear();
+			for(int i=0;i<symboles.size();i++) {
+				prop1.add(new JTextField(symboles.get(i).getKeyword() + " - " + symboles.get(i).getName().toString()));
+				prop1.get(i).setEnabled(false);
+				panprop1.add(prop1.get(i));
+				prop.add(new JTextField(symboles.get(i).getAssociatedTag()));
+				prop.get(i).setEnabled(false);
+				panprop.add(prop.get(i));
+				prop2.add(new JTextField(""));
+				prop2.get(i).setEnabled(true);
+				panprop2.add(prop2.get(i));
+			}
+			panprop.setMinimumSize(new Dimension(200,symboles.size()*30));
+			panprop.setLayout(new BoxLayout(panprop,BoxLayout.PAGE_AXIS));
+			panprop1.setMinimumSize(new Dimension(400,symboles.size()*30));
+			panprop1.setLayout(new BoxLayout(panprop1,BoxLayout.PAGE_AXIS));
+			panprop2.setMinimumSize(new Dimension(200,symboles.size()*30));
+			panprop2.setPreferredSize(new Dimension(200,symboles.size()*30));
+			panprop2.setLayout(new BoxLayout(panprop2,BoxLayout.PAGE_AXIS));
+			panpropt.add(panprop1);
+			panpropt.add(panprop);
+			panpropt.add(panprop2);
+			panpropt.setAutoscrolls(true);
+			pan.repaint();
+			pan.revalidate();
+		}
 	}
 
 	private void execAction() {
 		synoptiques.clear();
+		pan.setVisible(false);
 		findFilesRecursively(new File(cheminSource), all, ".gdfx");
 		for(File file11 : all){
 			synoptiques.add(new Synoptique(file11.getName().substring(0, file11.getName().toString().length() - 5),file11.getAbsolutePath()));
 		}
 		for (int i = 0;i<synoptiques.size();i++){
-			textexec.append("Recherche des smarts symboles du synoptique " + synoptiques.get(i).getName());
-			synoptiques.get(i).findSmartSymbols(textexec);
+			synoptiques.get(i).findSmartSymbols();
 		}
 	}
 
@@ -177,13 +227,22 @@ public class Fenetre extends JFrame {
 
 	class SynoAction implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
+			pan.setVisible(true);
 			getSymboles();
 		}
 	}
 
 	class ExecAction implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
+			itemnav = 2;
 			execAction();
+		}
+	}
+
+	class RempAction implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			itemnav = 3;
+			getSymboles();
 		}
 	}
 
@@ -197,13 +256,13 @@ public class Fenetre extends JFrame {
 
 	class VisuAction implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			JPanel pantemp = new JPanel();
-			pantemp.setPreferredSize(new Dimension(800,200));
-			System.out.println("t");
+			itemnav = 1;
+			pansymb.setVisible(true);
+			pan.setVisible(true);
 			pan.setLayout(new BoxLayout(pan,BoxLayout.PAGE_AXIS));
+			getSymboles();
 			pan.add(pansyno);
 			pan.add(pansymb);
-			pan.add(pantemp);
 			pan.add(panpropt);
 			panPrin.add(pan);
 			panPrin.repaint();
