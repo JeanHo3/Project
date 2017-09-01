@@ -166,6 +166,10 @@ public class Fenetre extends JFrame {
 			proprietes = symboles.get(symb.getSelectedIndex()).getListProperty();
 			prop1.add(new JTextField("Tag associé :"));
 			prop.add(new JTextField(symboles.get(symb.getSelectedIndex()).getAssociatedTag()));
+			prop1.add(new JTextField("Position X :"));
+			prop.add(new JTextField(symboles.get(symb.getSelectedIndex()).getX()));
+			prop1.add(new JTextField("Position Y :"));
+			prop.add(new JTextField(symboles.get(symb.getSelectedIndex()).getY()));
 			for(int i=0;i<proprietes.size();i++) {
 				prop.add(new JTextField(proprietes.get(i).getValue().toString()));
 				prop.get(i).setEnabled(false);

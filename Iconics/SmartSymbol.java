@@ -45,6 +45,14 @@ public class SmartSymbol {
 		this.getY = y;
 	}
 
+	public int getX(){
+		return this.getX;
+	}
+
+	public int getY(){
+		return this.getY;
+	}
+
 	public String getKeyword() {
 		return this.keyword;
 	}
