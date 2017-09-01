@@ -234,7 +234,7 @@ public class Fenetre extends JFrame {
 		for (int i = 0;i<synoptiques.size();i++){
 			synoptiques.get(i).findSmartSymbols(this.textexec);
 		}
-		pan.add(this.textexec);
+		panexec.add(this.textexec);
 	}
 
 	//Fonction findFilesRecursively

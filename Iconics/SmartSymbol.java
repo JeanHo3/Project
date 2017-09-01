@@ -11,6 +11,8 @@ public class SmartSymbol {
 	private String associatedTag;
 	@SuppressWarnings("unused")
 	private String changedTag;
+	private int posX;
+	private int posY;
 	private static int id;
 	private int idp;
 
@@ -34,7 +36,15 @@ public class SmartSymbol {
 		id++;
 		this.idp = id;
 	}
-	
+
+	public void setgetX(int x){
+		this.getX = x;
+	}
+
+	public void setgetX(int y){
+		this.getY = y;
+	}
+
 	public String getKeyword() {
 		return this.keyword;
 	}
@@ -42,15 +52,15 @@ public class SmartSymbol {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getName() {
 		return this.name;
 	}
-	
+
 	public List<Property> getListProperty(){
 		return this.listProperties;
 	}
-	
+
 	public void setChangedTag(String tag) {
 		this.changedTag = tag;
 	}
@@ -58,11 +68,11 @@ public class SmartSymbol {
 	public String getAssociatedTag() {
 		return this.associatedTag;
 	}
-	
+
 	public void setKeyword(String keyword) {
 		this.keyword = keyword;
 	}
-	
+
 	public int hasTag() {
 		if ((this.associatedTag.length()>=20))
 			return 1;
@@ -94,7 +104,7 @@ public class SmartSymbol {
 		}
 		return l;
 	}
-	
+
 	public String findTags() {
 		String API = "";
 		String Site = "";
@@ -149,6 +159,6 @@ public class SmartSymbol {
 					this.listProperties.add(new Property(name.group(1),type.group(1)));
 				}
 			}
-		}		
+		}
 	}
 }

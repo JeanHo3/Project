@@ -142,6 +142,13 @@ public class Synoptique {
 						if (mnemo.length() == 26)
 							this.tagsIn.add(new Tag(mnemo,API,false,true));
 					}
+					Matcher getX = Pattern.compile("Canvas.Left=\"(.*?)\"").matcher(fileContent);
+					Matcher getY = Pattern.compile("Canvas.Top=\"(.*?)\"").matcher(fileContent);
+					getX.find();
+					int c = getX.start();
+					getY.find(c);
+					this.smartSymbolsIn.get(smartSymbolsIn.size()-1).setgetX(getX.group(1));
+					this.smartSymbolsIn.get(smartSymbolsIn.size()-1).setgetY(getY.group(1));
 				}
 			}
 		}catch (Exception e){//Catch exception if any
