@@ -71,11 +71,18 @@ public class Synoptique {
 	public List<SmartSymbol> getListeSS(){
 		return this.smartSymbolsIn;
 	}
-	
+
 	public int getNbSSIn() {
 		return this.nbSmartSymbolsIn;
 	}
-	
+
+	//Methode rename 1 (basée sur le nom du smart existant Ico)
+	public void autoRenameSmart(){
+		for(int i=0;i<this.smartSymbolsIn.size();i++){
+			//Substring du SK de l'objet (all before first " ") -> Rename avec ajout numérotation
+		}
+	}
+
 	public void descriptionComplete(BufferedWriter bw) {
 		try {
 			getNbTagsIn();

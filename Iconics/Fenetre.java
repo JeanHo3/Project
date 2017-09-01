@@ -225,14 +225,16 @@ public class Fenetre extends JFrame {
 	//- En sortie, nous avons tous les objects Synoptique, Tag, SmartSymbol et Property nécessaire à l'application
 	private void execAction() {
 		synoptiques.clear();
+		panexec.setVisible(true);
 		pan.setVisible(false);
 		findFilesRecursively(new File(cheminSource), all, ".gdfx");
 		for(File file11 : all){
 			synoptiques.add(new Synoptique(file11.getName().substring(0, file11.getName().toString().length() - 5),file11.getAbsolutePath()));
 		}
 		for (int i = 0;i<synoptiques.size();i++){
-			synoptiques.get(i).findSmartSymbols();
+			synoptiques.get(i).findSmartSymbols(this.textexec);
 		}
+		pan.add(this.textexec);
 	}
 
 	//Fonction findFilesRecursively
