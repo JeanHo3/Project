@@ -9,10 +9,9 @@ public class SmartSymbol {
 	private String customData;
 	private List<Property> listProperties = new ArrayList<Property>();
 	private String associatedTag;
-	@SuppressWarnings("unused")
 	private String changedTag;
-	private int posX;
-	private int posY;
+	private double posX;
+	private double posY;
 	private static int id;
 	private int idp;
 
@@ -37,20 +36,28 @@ public class SmartSymbol {
 		this.idp = id;
 	}
 
-	public void setgetX(int x){
-		this.getX = x;
+	public int getId() {
+		return this.idp;
 	}
 
-	public void setgetX(int y){
-		this.getY = y;
+	public String getChangedTag() {
+		return this.changedTag;
 	}
 
-	public int getX(){
-		return this.getX;
+	public void setgetX(double x){
+		this.posX = x;
 	}
 
-	public int getY(){
-		return this.getY;
+	public void setgetY(double y){
+		this.posY = y;
+	}
+
+	public double getX(){
+		return this.posX;
+	}
+
+	public double getY(){
+		return this.posY;
 	}
 
 	public String getKeyword() {
@@ -67,6 +74,10 @@ public class SmartSymbol {
 
 	public List<Property> getListProperty(){
 		return this.listProperties;
+	}
+
+	public Property getProperty(int id) {
+		return listProperties.get(id);
 	}
 
 	public void setChangedTag(String tag) {

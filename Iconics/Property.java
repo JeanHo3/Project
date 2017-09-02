@@ -3,27 +3,31 @@ public class Property {
 	private String name;
 	private String value;
 	private String type;
-	private static int id = 0;
-	
+	private static int id;
+	private int idp;
+
 	public Property() {
 		this.setName("");
 		this.setType("");
 		this.setValue("");
-		setId(getId() + 1);
+		id++;
+		this.setIdp(id);
 	}
-	
+
 	public Property(String pName, String pType, String pValue) {
 		this.setName(pName);
 		this.setType(pType);
 		this.setValue(pValue);
-		setId(getId() + 1);
+		id++;
+		this.setIdp(id);
 	}
-	
+
 	public Property(String pName, String pType) {
 		this.setName(pName);
 		this.setType(pType);
 		this.value = "";
-		setId(getId() + 1);
+		id++;
+		this.setIdp(id);
 	}
 
 	public String getName() {
@@ -49,11 +53,11 @@ public class Property {
 	public void setValue(String value) {
 		this.value = value;
 	}
-	
+
 	public void description() {
 		System.out.println("-- Nom : " + this.name + ", Valeur : " + this.value + ", Type : " + this.type + ".");
 	}
-	
+
 	public String descriptionRet() {
 		return ("\t Nom : " + this.name + ", Valeur : " + this.value + ", Type : " + this.type + ".");
 	}
@@ -64,5 +68,13 @@ public class Property {
 
 	public static void setId(int id) {
 		Property.id = id;
+	}
+
+	public int getIdp() {
+		return idp;
+	}
+
+	public void setIdp(int idp) {
+		this.idp = idp;
 	}
 }

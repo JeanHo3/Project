@@ -1,3 +1,5 @@
+
+import java.awt.Color;
 import java.io.BufferedInputStream;
 //import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,7 +13,6 @@ import java.util.List;
 //import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.swing.JTextArea;
 
 public class Synoptique {
@@ -23,6 +24,8 @@ public class Synoptique {
 	private List<Tag> tagsIn = new ArrayList<Tag>();
 	private static int id;
 	private int idp;
+	private CoreControl controlg = new CoreControl();
+
 
 	public Synoptique() {	//Création synoptique simple (non renseigné)
 		this.name = "Default";
@@ -52,6 +55,14 @@ public class Synoptique {
 		countSmartSymbolsIn();
 	}
 
+	public CoreControl getControl() {
+		return this.controlg;
+	}
+
+	public int getId() {
+		return this.idp;
+	}
+
 	public String getName() {	//Récupération du nom du Synoptique
 		return this.name;
 	}
@@ -74,6 +85,10 @@ public class Synoptique {
 
 	public int getNbSSIn() {
 		return this.nbSmartSymbolsIn;
+	}
+
+	public SmartSymbol getSmartS(int id) {
+		return this.smartSymbolsIn.get(id);
 	}
 
 	//Methode rename 1 (basée sur le nom du smart existant Ico)
@@ -105,6 +120,24 @@ public class Synoptique {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+	}
+
+	public void ajoutPoint() {
+		for (int i=0;i<this.smartSymbolsIn.size();i++) {
+			int l = (int)this.smartSymbolsIn.get(i).getX()/8;
+			int m = (int)this.smartSymbolsIn.get(i).getY()/8;
+			if(l>0 && l<970 && m>0 && m<450) {
+				this.controlg.fillCell(l, m, Color.RED);
+			}
+		}
+	}
+
+	public void repaintPoint(int ssID, Color col) {
+		int l = (int)this.smartSymbolsIn.get(ssID).getX()/8;
+		int m = (int)this.smartSymbolsIn.get(ssID).getY()/8;
+		if(l>0 && l<970 && m>0 && m<450) {
+			this.controlg.fillCell(l, m, col);
 		}
 	}
 
@@ -144,16 +177,34 @@ public class Synoptique {
 					}
 					Matcher getX = Pattern.compile("Canvas.Left=\"(.*?)\"").matcher(fileContent);
 					Matcher getY = Pattern.compile("Canvas.Top=\"(.*?)\"").matcher(fileContent);
-					getX.find();
-					int c = getX.start();
-					getY.find(c);
-					this.smartSymbolsIn.get(smartSymbolsIn.size()-1).setgetX(getX.group(1));
-					this.smartSymbolsIn.get(smartSymbolsIn.size()-1).setgetY(getY.group(1));
+					Matcher end = Pattern.compile("</gwx:SmartSymbol>").matcher(fileContent);
+					end.find(a);
+					int g = end.start();
+					double x = 0.0;
+					double y = 0.0;
+					int r = a;
+					while((x<=0.0 || x>1950.0 || y<=0.0 || y>1950.0) && !(r>g)) {
+						getX.find(r);
+						int c = getX.start();
+						getY.find(c);
+						r = getX.end();
+						x = Double.parseDouble(getX.group(1));
+						y = Double.parseDouble(getY.group(1));
+					}
+					if(x<=0.0 || x>1950.0 || y<=0.0 || y>1950.0){
+						this.smartSymbolsIn.get(smartSymbolsIn.size()-1).setgetX(0.0);
+						this.smartSymbolsIn.get(smartSymbolsIn.size()-1).setgetY(0.0);
+					}
+					else {
+						this.smartSymbolsIn.get(smartSymbolsIn.size()-1).setgetX(Double.parseDouble(getX.group(1)));
+						this.smartSymbolsIn.get(smartSymbolsIn.size()-1).setgetY(Double.parseDouble(getY.group(1)));
+					}
 				}
 			}
 		}catch (Exception e){//Catch exception if any
-			System.err.println("Error: " + e.getMessage());
+			System.err.println("Error: " + e.getMessage() + " //" + getName());
 		}
+		ajoutPoint();
 	}
 
 	//	public Map<String, Object[]> addToDatas(Map<String, Object[]> data) {
