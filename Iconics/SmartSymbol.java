@@ -36,6 +36,14 @@ public class SmartSymbol {
 		this.idp = id;
 	}
 
+	public String getShareKeyword() {
+		return this.keyword;
+	}
+
+	public String getCustomData() {
+		return this.customData;
+	}
+
 	public int getId() {
 		return this.idp;
 	}

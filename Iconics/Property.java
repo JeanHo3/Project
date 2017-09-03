@@ -12,6 +12,7 @@ public class Property {
 		this.setValue("");
 		id++;
 		this.setIdp(id);
+
 	}
 
 	public Property(String pName, String pType, String pValue) {

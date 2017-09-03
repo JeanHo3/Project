@@ -25,7 +25,7 @@ public class Synoptique {
 	private static int id;
 	private int idp;
 	private CoreControl controlg = new CoreControl();
-
+	private boolean isReference;
 
 	public Synoptique() {	//Création synoptique simple (non renseigné)
 		this.name = "Default";
@@ -36,6 +36,7 @@ public class Synoptique {
 		this.tagsIn = null;
 		id++;
 		this.idp = id;
+		this.isReference = false;
 	}
 
 	public Synoptique(String pname, String ppath) {	//Création synoptique complexe (renseigné)
@@ -43,6 +44,7 @@ public class Synoptique {
 		this.path = ppath;
 		id++;
 		this.idp = id;
+		this.isReference = false;
 	}
 
 	public void addTagsIn (String pMnemonique, String pApi, boolean pFromExcel, boolean isInfo) {	//Ajout d'un tag au synoptique par construction de l'objet
@@ -53,6 +55,14 @@ public class Synoptique {
 	public void addSmartSymbolIn (String pName, String pKeyword, String pCustomData) {	//Ajout d'un smart symbol au synoptique par création de l'objet
 		this.smartSymbolsIn.add(new SmartSymbol(pName,pKeyword,pCustomData));
 		countSmartSymbolsIn();
+	}
+
+	public void setReference(boolean ref) {
+		this.isReference = ref;
+	}
+
+	public boolean getReference () {
+		return this.isReference;
 	}
 
 	public CoreControl getControl() {

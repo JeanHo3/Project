@@ -44,6 +44,7 @@ public class Fenetre extends JFrame {
 	private JMenuItem item1 = new JMenuItem("Visualiser");
 	private JMenuItem item2 = new JMenuItem("Executer");
 	private JMenuItem item3 = new JMenuItem("Remplacer");
+	private JMenuItem item4 = new JMenuItem("Contrôler");
 	private int itemnav = 0;
 
 	//Panel d'affichage des données
@@ -59,6 +60,7 @@ public class Fenetre extends JFrame {
 	private JPanel panMenu1 = new JPanel();
 	private JPanel panMenu2 = new JPanel();
 	private JPanel panMenu3 = new JPanel();
+	private JPanel panMenu4 = new JPanel();
 
 	//Paramètres d'utilisation globale
 	private List<Synoptique> synoptiques = new ArrayList<Synoptique>();
@@ -71,6 +73,8 @@ public class Fenetre extends JFrame {
 	private Font font1 = new Font("SansSerif", Font.BOLD, 10);
 	private JFrame window = new JFrame();
 	private Point p = new Point((int)this.width-970, 0);
+	private ArrayList<String> listeSK = new ArrayList<String>();
+    private ArrayList<String> listeCD = new ArrayList<String>();
 
 	//Constructeur
 	public Fenetre() {
@@ -128,6 +132,8 @@ public class Fenetre extends JFrame {
 		item2.addActionListener(new ExecAction());
 		menu1.add(item3);
 		item3.addActionListener(new RempAction());
+		menu1.add(item4);
+		item4.addActionListener(new ControleAction());
 		menuBar.add(menu1);
 		this.setJMenuBar(menuBar);
 
@@ -155,14 +161,9 @@ public class Fenetre extends JFrame {
 	private void getSymboles() {
 		clearAll();
 		symb.removeAllItems();
-		//symboles = synoptiques.get(syno.getSelectedIndex()).getListeSS();
 		for(int i=0;i<synoptiques.get(syno.getSelectedIndex()).getNbSSIn();i++) {
 			symb.addItem(synoptiques.get(syno.getSelectedIndex()).getSmartS(i).getKeyword().toString() + " - " + synoptiques.get(syno.getSelectedIndex()).getSmartS(i).getName().toString());
 		}
-
-		/*for(int i=0;i<symboles.size();i++) {
-			symb.addItem(symboles.get(i).getKeyword() + " - " + symboles.get(i).getName().toString());
-		}*/
 		pansymb.repaint();
 		pansymb.revalidate();
 		if (itemnav == 1) getProperties();
@@ -170,6 +171,7 @@ public class Fenetre extends JFrame {
 			rempAction();
 			mapAction();
 		}
+		if(itemnav == 4) getControle();
 	}
 
 	//Fonction getProperties pour Menu 1
@@ -181,16 +183,11 @@ public class Fenetre extends JFrame {
 	//- Mets à jour le panel principal
 	private void getProperties() {
 			clearAll();
-
-			//proprietes = symboles.get(symb.getSelectedIndex()).getListProperty();
 			prop1.add(new JTextField("Tag associé :"));
-			//prop.add(new JTextField(symboles.get(symb.getSelectedIndex()).getAssociatedTag()));
 			prop.add(new JTextField(synoptiques.get(syno.getSelectedIndex()).getSmartS(symb.getSelectedIndex()).getAssociatedTag()));
 			prop1.add(new JTextField("Position X :"));
-			//prop.add(new JTextField((String.valueOf(symboles.get(symb.getSelectedIndex()).getX()))));
 			prop.add(new JTextField(String.valueOf(synoptiques.get(syno.getSelectedIndex()).getSmartS(symb.getSelectedIndex()).getX())));
 			prop1.add(new JTextField("Position Y :"));
-			//prop.add(new JTextField(String.valueOf(symboles.get(symb.getSelectedIndex()).getY())));
 			prop.add(new JTextField(String.valueOf(synoptiques.get(syno.getSelectedIndex()).getSmartS(symb.getSelectedIndex()).getY())));
 			for(int i=0;i<3;i++) {
 				prop.get(i).setEnabled(false);
@@ -204,13 +201,11 @@ public class Fenetre extends JFrame {
 			}
 			for(int i=0;i<synoptiques.get(syno.getSelectedIndex()).getSmartS(symb.getSelectedIndex()).getListProperty().size();i++) {
 				prop.add(new JTextField(synoptiques.get(syno.getSelectedIndex()).getSmartS(symb.getSelectedIndex()).getProperty(i).getValue().toString()));
-				//prop.add(new JTextField(proprietes.get(i).getValue().toString()));
 				prop.get(i+3).setEnabled(false);
 				prop.get(i+3).setFont(font1);
 				prop.get(i+3).setPreferredSize(new Dimension(3*((new Dimension(this.getSize())).width-10)/4,17));
 				panprop.add(prop.get(i+3));
 				prop1.add(new JTextField(synoptiques.get(syno.getSelectedIndex()).getSmartS(symb.getSelectedIndex()).getProperty(i).getName().toString()));
-				//prop1.add(new JTextField(proprietes.get(i).getName().toString()));
 				prop1.get(i+3).setEnabled(false);
 				prop1.get(i+3).setFont(font1);
 				prop1.get(i+3).setPreferredSize(new Dimension(1*((new Dimension(this.getSize())).width-10)/4,17));
@@ -263,6 +258,22 @@ public class Fenetre extends JFrame {
         window.setVisible(true);
 	}
 
+	private void getControle() {
+		for(int i=0;i<synoptiques.get(syno.getSelectedIndex()).getNbSSIn();i++) {
+			listeCD.add(synoptiques.get(syno.getSelectedIndex()).getSmartS(i).getCustomData().toString());
+			listeSK.add(synoptiques.get(syno.getSelectedIndex()).getSmartS(i).getShareKeyword().toString());
+		}
+		for(int i=0;i<synoptiques.size();i++) {
+			for(int j=0;j<synoptiques.get(i).getNbSSIn();j++) {
+				//if(synoptiques.get(i).getSmartS(j).getKeyword())
+				//Ajouter un panel avec case à cocher sélection du synoptique type
+				//Y accoler un listener pour updater l'activation/désactivation de la sélection
+				//
+			}
+		}
+		reprintPanPrin(panMenu4);
+	}
+
 	//Fonction execAction
 	//- Recherche les fichiers des synoptiques dans le chemin Source
 	//- Ajouter à la liste les nouveaux synoptiques
@@ -301,28 +312,11 @@ public class Fenetre extends JFrame {
 		public void componentResized(ComponentEvent e) {
 			if (itemnav == 1 || itemnav == 3) getSymboles();
 		}
-		@Override
 		public void componentMoved(ComponentEvent e) {
-			// TODO Auto-generated method stub
-
 		}
-
-		@Override
 		public void componentShown(ComponentEvent e) {
-			// TODO Auto-generated method stub
-
 		}
-
-		@Override
 		public void componentHidden(ComponentEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-	}
-
-	class ChangeTag implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-
 		}
 	}
 
@@ -359,6 +353,7 @@ public class Fenetre extends JFrame {
 			panMenu1.setVisible(true);
 			panMenu2.setVisible(false);
 			panMenu3.setVisible(false);
+			panMenu4.setVisible(false);
 			panMenu1.setLayout(new BoxLayout(panMenu1,BoxLayout.PAGE_AXIS));
 			getSymboles();
 			panMenu1.add(pansyno);
@@ -378,6 +373,7 @@ public class Fenetre extends JFrame {
 			panMenu1.setVisible(false);
 			panMenu2.setVisible(true);
 			panMenu3.setVisible(false);
+			panMenu4.setVisible(false);
 			reprintPanPrin(panMenu2);
 		}
 	}
@@ -391,11 +387,27 @@ public class Fenetre extends JFrame {
 			panMenu1.setVisible(false);
 			panMenu2.setVisible(false);
 			panMenu3.setVisible(true);
+			panMenu4.setVisible(false);
 			panMenu3.setLayout(new BoxLayout(panMenu3,BoxLayout.PAGE_AXIS));
 			getSymboles();
 			panMenu3.add(pansyno);
 			panMenu3.add(panpropt);
 			reprintPanPrin(panMenu3);
+		}
+	}
+
+	class ControleAction implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			itemnav = 4;
+			menu1.setText(item4.getText());
+			panMenu1.setVisible(false);
+			panMenu2.setVisible(false);
+			panMenu3.setVisible(false);
+			panMenu4.setVisible(true);
+			panMenu4.setLayout(new BoxLayout(panMenu4,BoxLayout.PAGE_AXIS));
+			getSymboles();
+			panMenu4.add(pansyno);
+			reprintPanPrin(panMenu4);
 		}
 	}
 
