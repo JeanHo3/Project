@@ -14,6 +14,7 @@ public class SmartSymbol {
 	private double posY;
 	private static int id;
 	private int idp;
+	private int state;	//Etats : 0 - up to date / 1 - Keyword inconnu / 2 - CustomData old
 
 	public SmartSymbol(String pName, String pKeyword, String pCustomData) {
 		this.setName(pName);
