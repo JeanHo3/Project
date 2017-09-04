@@ -14,6 +14,7 @@ public class SmartSymbol {
 	private double posY;
 	private static int id;
 	private int idp;
+	private boolean qualityGood;
 
 	public SmartSymbol(String pName, String pKeyword, String pCustomData) {
 		this.setName(pName);
@@ -23,6 +24,7 @@ public class SmartSymbol {
 		this.changedTag = "";
 		id++;
 		this.idp = id;
+		this.qualityGood = false;
 	}
 
 	public SmartSymbol(String pName, String pKeyword, String pCustomData, List<Property> pListProperty) {
@@ -34,6 +36,15 @@ public class SmartSymbol {
 		this.changedTag = "";
 		id++;
 		this.idp = id;
+		this.qualityGood = false;
+	}
+
+	public void setQuality(boolean setQ) {
+		this.qualityGood = setQ;
+	}
+
+	public boolean getQuality() {
+		return this.qualityGood;
 	}
 
 	public String getShareKeyword() {
