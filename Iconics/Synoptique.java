@@ -96,12 +96,13 @@ public class Synoptique {
 		return this.path;
 	}
 
-	public void getNbTagsIn() {	//Récupération du nombre de tags présents sur le Synoptique
+	public int getNbTagsIn() {	//Récupération du nombre de tags présents sur le Synoptique
 		int p = 0;
 		for (int i=0;i<this.smartSymbolsIn.size();i++) {
 			p = p + this.smartSymbolsIn.get(i).hasTag();
 		}
 		this.nbTagsIn = p;
+		return this.nbTagsIn;
 	}
 
 	public List<SmartSymbol> getListeSS(){
@@ -233,6 +234,7 @@ public class Synoptique {
 		}catch (Exception e){//Catch exception if any
 			//System.err.println("Error: " + e.getMessage() + " //" + getName());
 		}
+		getNbTagsIn();
 		ajoutPoint();
 	}
 
