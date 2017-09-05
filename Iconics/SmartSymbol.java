@@ -39,6 +39,21 @@ public class SmartSymbol {
 		this.qualityGood = false;
 	}
 
+	public List<String> getListStrProp() {
+		List<String> listeProp = new ArrayList<String>();
+		for(int p=0;p<this.listProperties.size();p++) listeProp.add(this.listProperties.get(p).getName().toString());
+		return listeProp;
+	}
+
+	public String getValueIfExistsProp(String name) {
+		int ind = -1;
+		for(int p=0;p<this.listProperties.size();p++) {
+			if(this.listProperties.get(p).getName().toString().equals(name)) ind = p;
+		}
+		if (ind != -1)  return this.listProperties.get(ind).getValue().toString();
+		else return "";
+	}
+
 	public void setQuality(boolean setQ) {
 		this.qualityGood = setQ;
 	}

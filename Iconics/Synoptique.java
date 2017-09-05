@@ -246,13 +246,14 @@ public class Synoptique {
 	public void controlQuality(List<String> refK, List<String> refC) {
 		int index = 0;
 		int indexLocal = 0;
-		for (String k:listeKeyword) {	//Pour tous les keyword de la liste (keywords des symboles du synoptique)
+		for (String k:this.listeKeyword) {	//Pour tous les keyword de la liste (keywords des symboles du synoptique)
 			while (index<refK.size()-1 && !(k.toString().equals(refK.get(index).toString()))) {	//Je le cherche dans la liste de référence refk	Si je le trouve, je vérifie si les CustomData sont identiques (quality true)
 				index++;
 			}
-			if((k.toString().equals(refK.get(index).toString())) && (this.listeCustomData.get(indexLocal).toString().equals(refC.get(index).toString())) && !(this.listeCustomData.get(indexLocal).toString().equals(""))) {
+			if((k.toString().equals(refK.get(index).toString())) && (this.listeCustomData.get(indexLocal).toString().equals(refC.get(index).toString()))) {
 				this.smartSymbolsIn.get(indexLocal).setQuality(true);
 			}
+			if(this.getName().toString() == "Symboles OptimisesV2") this.smartSymbolsIn.get(indexLocal).setQuality(true);
 			indexLocal++;
 			index=0;
 		}
@@ -261,7 +262,7 @@ public class Synoptique {
 				this.listeInvalide.add(this.smartSymbolsIn.get(i).getKeyword().toString());
 			}
 		}
-		Collections.sort(listeInvalide);
+		Collections.sort(this.listeInvalide);
 	}
 
 	private void countSmartSymbolsIn() {	//Fonction de comptage du nombre de Smart Symbol sur le Synoptique
