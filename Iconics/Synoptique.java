@@ -9,11 +9,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 //import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 //import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.JTextArea;
 
 public class Synoptique {
 	private String name;
@@ -21,6 +21,9 @@ public class Synoptique {
 	private int nbTagsIn;
 	private int nbSmartSymbolsIn;
 	private List<SmartSymbol> smartSymbolsIn = new ArrayList<SmartSymbol>();
+	private List<String> listeKeyword = new ArrayList<String>();
+	private List<String> listeCustomData = new ArrayList<String>();
+	private List<String> listeInvalide = new ArrayList<String>();
 	private List<Tag> tagsIn = new ArrayList<Tag>();
 	private static int id;
 	private int idp;
@@ -45,6 +48,18 @@ public class Synoptique {
 		id++;
 		this.idp = id;
 		this.isReference = false;
+	}
+
+	public List<String> getListeInval(){
+		return this.listeInvalide;
+	}
+
+	public List<String> getListeK(){
+		return this.listeKeyword;
+	}
+
+	public List<String> getListeC(){
+		return this.listeCustomData;
 	}
 
 	public void addTagsIn (String pMnemonique, String pApi, boolean pFromExcel, boolean isInfo) {	//Ajout d'un tag au synoptique par construction de l'objet
@@ -151,7 +166,7 @@ public class Synoptique {
 		}
 	}
 
-	public void findSmartSymbols(JTextArea textarea) {
+	public void findSmartSymbols() {
 		try{
 			String mnemo = "";
 			String API = "";
@@ -167,9 +182,13 @@ public class Synoptique {
 					keyword.find();
 					if(customData.find()) {
 						addSmartSymbolIn (name.group(1),keyword.group(1),customData.group(1));
+						this.listeCustomData.add(customData.group(1));
+						this.listeKeyword.add(keyword.group(1));
 					}
 					else {
 						addSmartSymbolIn (name.group(1),keyword.group(1),"");
+						this.listeCustomData.add("");
+						this.listeKeyword.add(keyword.group(1));
 					}
 					Matcher getProperties = Pattern.compile("</gwx:SmartSymbol.PropertyDefinitions>").matcher(fileContent);
 					getProperties.find(a);
@@ -201,7 +220,7 @@ public class Synoptique {
 						x = Double.parseDouble(getX.group(1));
 						y = Double.parseDouble(getY.group(1));
 					}
-					if(x<=0.0 || x>1950.0 || y<=0.0 || y>1950.0){
+					if((x<=0.0 || x>1950.0) && (y<=0.0 || y>1950.0)){
 						this.smartSymbolsIn.get(smartSymbolsIn.size()-1).setgetX(0.0);
 						this.smartSymbolsIn.get(smartSymbolsIn.size()-1).setgetY(0.0);
 					}
@@ -212,7 +231,7 @@ public class Synoptique {
 				}
 			}
 		}catch (Exception e){//Catch exception if any
-			System.err.println("Error: " + e.getMessage() + " //" + getName());
+			//System.err.println("Error: " + e.getMessage() + " //" + getName());
 		}
 		ajoutPoint();
 	}
@@ -224,6 +243,26 @@ public class Synoptique {
 	//		return data;
 	//	}
 
+	public void controlQuality(List<String> refK, List<String> refC) {
+		int index = 0;
+		int indexLocal = 0;
+		for (String k:listeKeyword) {	//Pour tous les keyword de la liste (keywords des symboles du synoptique)
+			while (index<refK.size()-1 && !(k.toString().equals(refK.get(index).toString()))) {	//Je le cherche dans la liste de référence refk	Si je le trouve, je vérifie si les CustomData sont identiques (quality true)
+				index++;
+			}
+			if((k.toString().equals(refK.get(index).toString())) && (this.listeCustomData.get(indexLocal).toString().equals(refC.get(index).toString())) && !(this.listeCustomData.get(indexLocal).toString().equals(""))) {
+				this.smartSymbolsIn.get(indexLocal).setQuality(true);
+			}
+			indexLocal++;
+			index=0;
+		}
+		for (int i=0;i<this.smartSymbolsIn.size();i++) {
+			if (!(this.name.contains("Symbole")) && this.smartSymbolsIn.get(i).getQuality() == false && !(this.listeInvalide.contains(this.smartSymbolsIn.get(i).getKeyword().toString()))) {
+				this.listeInvalide.add(this.smartSymbolsIn.get(i).getKeyword().toString());
+			}
+		}
+		Collections.sort(listeInvalide);
+	}
 
 	private void countSmartSymbolsIn() {	//Fonction de comptage du nombre de Smart Symbol sur le Synoptique
 		this.nbSmartSymbolsIn = smartSymbolsIn.size();
