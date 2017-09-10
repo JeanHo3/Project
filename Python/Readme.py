@@ -14,3 +14,6 @@ characters = [
     "le chat potté",
     "Kirikou"
 ]
+
+print(quotes)
+print(characters)
