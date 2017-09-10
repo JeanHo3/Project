@@ -10,4 +10,4 @@ def launch_analysis(data_file):
     print("Yeah! Readed. Preview:{}".format(preview))
 
 if __name__ == "__main__":
-    main()
+    launch_analysis('data/current_mps.csv')
