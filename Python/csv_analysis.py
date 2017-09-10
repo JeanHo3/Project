@@ -1,19 +1,13 @@
-# -*- coding: latin-1 -*-
+import os
 
-quotes = [
-    "Ecoutez-moi, Monsieur Shakespeare, nous avons beau être ou ne pas être, nous sommes !",
-    "On doit pouvoir choisir entre s'écouter parler et se faire entendre."
-]
+def launch_analysis(data_file):
+    directory = os.path.dirname(__file__)
+    path_to_file = os.path.join(directory,"data",data_file)
 
-characters = [
-    "alvin et les Chipmunks",
-    "Babar",
-    "betty boop",
-    "calimero",
-    "casper",
-    "le chat potté",
-    "Kirikou"
-]
+    with open(path_to_file, "r") as f:
+        preview = f.readline()
 
-print(quotes)
-print(characters)
+    print("Yeah! Readed. Preview:{}".format(preview))
+
+if __name__ == "__main__":
+    main()
