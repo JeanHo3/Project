@@ -181,7 +181,8 @@ public class Synoptique {
 					Matcher keyword = Pattern.compile("gwx:GwxProperties.Keyword=\"(.*?)\"").matcher(l.group(0));
 					name.find();
 					keyword.find();
-					if(customData.find()) {
+					customData.find();
+					if(!(customData.hitEnd())) {
 						addSmartSymbolIn (name.group(1),keyword.group(1),customData.group(1));
 						this.listeCustomData.add(customData.group(1));
 						this.listeKeyword.add(keyword.group(1));
@@ -192,28 +193,34 @@ public class Synoptique {
 						this.listeKeyword.add(keyword.group(1));
 					}
 					Matcher getProperties = Pattern.compile("</gwx:SmartSymbol.PropertyDefinitions>").matcher(fileContent);
-					getProperties.find(a);
-					int b = getProperties.start();
-					String toProperties = fileContent.substring(a, b);
-					this.smartSymbolsIn.get(smartSymbolsIn.size()-1).findProperties(toProperties);
-					mnemo = this.smartSymbolsIn.get(smartSymbolsIn.size()-1).findTags();
-					if (!(mnemo.equals(""))) {
-						API = mnemo.substring(0, 3);
-						mnemo = mnemo.substring(3);
-						if (mnemo.length() == 22)
-							this.tagsIn.add(new Tag(mnemo,API,false,false));
-						if (mnemo.length() == 26)
-							this.tagsIn.add(new Tag(mnemo,API,false,true));
-					}
-					Matcher getX = Pattern.compile("Canvas.Left=\"(.*?)\"").matcher(fileContent);
-					Matcher getY = Pattern.compile("Canvas.Top=\"(.*?)\"").matcher(fileContent);
 					Matcher end = Pattern.compile("</gwx:SmartSymbol>").matcher(fileContent);
 					end.find(a);
 					int g = end.start();
+					getProperties.find(a);
+					if(!(getProperties.hitEnd())) {
+						int b = getProperties.start();
+						if(b<g) {
+							String toProperties = fileContent.substring(a, b);
+							this.smartSymbolsIn.get(smartSymbolsIn.size()-1).findProperties(toProperties);
+							mnemo = this.smartSymbolsIn.get(smartSymbolsIn.size()-1).findTags();
+							if (!(mnemo.equals(""))) {
+								API = mnemo.substring(0, 3);
+								mnemo = mnemo.substring(3);
+								if (mnemo.length() == 22)
+									this.tagsIn.add(new Tag(mnemo,API,false,false));
+								if (mnemo.length() == 26)
+									this.tagsIn.add(new Tag(mnemo,API,false,true));
+							}
+						}
+					}
+					Matcher getX = Pattern.compile("Canvas.Left=\"(.*?)\"").matcher(fileContent);
+					Matcher getY = Pattern.compile("Canvas.Top=\"(.*?)\"").matcher(fileContent);
+
+
 					double x = 0.0;
 					double y = 0.0;
 					int r = a;
-					while((x<=0.0 || x>1950.0 || y<=0.0 || y>1950.0) && !(r>g)) {
+					while((x<=0.0 || y<=0.0) && !(r>g)) {
 						getX.find(r);
 						int c = getX.start();
 						getY.find(c);
@@ -232,7 +239,7 @@ public class Synoptique {
 				}
 			}
 		}catch (Exception e){//Catch exception if any
-			//System.err.println("Error: " + e.getMessage() + " //" + getName());
+			System.err.println("Error: " + e.getMessage() + " //" + getName());
 		}
 		getNbTagsIn();
 		ajoutPoint();
@@ -259,9 +266,11 @@ public class Synoptique {
 			indexLocal++;
 			index=0;
 		}
-		for (int i=0;i<this.smartSymbolsIn.size();i++) {
-			if (!(this.name.contains("Symbole")) && this.smartSymbolsIn.get(i).getQuality() == false && !(this.listeInvalide.contains(this.smartSymbolsIn.get(i).getKeyword().toString()))) {
-				this.listeInvalide.add(this.smartSymbolsIn.get(i).getKeyword().toString());
+		if(!(this.getName().toString() == "Symboles OptimisesV2")) {
+			for (int i=0;i<this.smartSymbolsIn.size();i++) {
+				if (!(this.name.contains("Symbole")) && this.smartSymbolsIn.get(i).getQuality() == false && !(this.listeInvalide.contains(this.smartSymbolsIn.get(i).getKeyword().toString()))) {
+					this.listeInvalide.add(this.smartSymbolsIn.get(i).getKeyword().toString());
+				}
 			}
 		}
 		Collections.sort(this.listeInvalide);

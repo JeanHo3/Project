@@ -105,7 +105,7 @@ public class Tag {
 	public void setAPI(String aPI) {
 		API = aPI;
 	}
-	
+
 	public void description() {
 		System.out.println("Site - " + this.Site + ", CIF - " + this.CIF + ", Equipement - " + this.Equipement + ", ISA - " + this.NormeISA + ", Info - " + this.Info + ".");;
 	}
@@ -117,12 +117,12 @@ public class Tag {
 	public void setFromExcel(boolean fromExcel) {
 		this.fromExcel = fromExcel;
 	}
-	
+
 
 	public static int getId() {
 		return id;
 	}
-	
+
 
 	public static void setId(int id) {
 		Tag.id = id;
