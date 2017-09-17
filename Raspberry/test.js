@@ -61,6 +61,12 @@ function handleRead(){
 			if(err) console.log(err);
 		});
 
+		if(temp > 30 && mois > 750){
+			devices[0].writeByte(0x2,function(err){
+				if(err) console.log(err);
+			}
+		}
+
 		askdata = 1;
 	}
 	if((min%2)!=0){

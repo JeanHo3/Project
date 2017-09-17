@@ -18,14 +18,12 @@ void setup()
     Serial.begin(9600);
     dht.begin();
     Wire.begin(8);                // join i2c bus with address #8
-    //Wire.onRequest(requestEvent); // register event
     Wire.onReceive(receiveEvent);
     pinMode(motorPin, OUTPUT);
 }
 
 void loop()
 {
-
     float h = dht.readHumidity();
     float t = dht.readTemperature();
     int moisensValue = analogRead(moisensPin);
@@ -55,13 +53,6 @@ void loop()
     }
 }
 
-void requestEvent() {
-  char newOut[output.length()+1];
-  output.toCharArray(newOut, output.length()+1);
-  Wire.write(newOut); // respond with message
-  // as expected by master
-}
-
 void receiveEvent(int howMany){
   int x = Wire.read();
   if(x==1)
@@ -79,7 +70,12 @@ void receiveEvent(int howMany){
         char newOut[output.length()+1];
   output.toCharArray(newOut, output.length()+1);
   Wire.write(newOut); // respond with message
-
   }
-  Serial.println(x);
+  else if (x==2)
+  {
+    digitalWrite(motorPin, HIGH);
+    delay(watertime*1000);
+    digitalWrite(motorPin, LOW);
+    watered = true;
+  }
 }
