@@ -1,15 +1,11 @@
 import java.io.File;
 import java.io.IOException;
-import java.net.URLDecoder;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.junit.Test;
 
 
 public class Main {
@@ -48,12 +44,13 @@ public class Main {
 				else {
 					frame.setVisible(false);
 					frame.removeAll();
+					@SuppressWarnings("unused")
 					Fenetre fenetre = new Fenetre(str);
 				}
 			}
 		}
 		else {
-			JOptionPane.showMessageDialog(null,"Aucun fichier selectionnexs", "Information", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null,"Aucun fichier selectionne", "Information", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}
 

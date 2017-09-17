@@ -6,9 +6,7 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-//import java.awt.event.ComponentEvent;
+
 //import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -32,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -39,7 +38,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -48,10 +46,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
+
 import javax.swing.ScrollPaneConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+
 import javax.swing.text.DefaultCaret;
 
 public class Fenetre extends JFrame {
@@ -82,7 +79,7 @@ public class Fenetre extends JFrame {
 	private JMenuItem item13 = new JMenuItem("Search & Replace compose");
 	private int itemnav = 0;
 
-	//Panel d'affichage des donn�es
+	//Panel d'affichage des donnees
 	private JPanel panPrin = new JPanel();
 	private JPanel pansyno = new JPanel();
 	private JPanel pansymb = new JPanel();
@@ -110,16 +107,13 @@ public class Fenetre extends JFrame {
 	private List<JTextField> prop1 = new ArrayList<JTextField>();
 	private List<JTextField> prop2 = new ArrayList<JTextField>();
 	private JTextArea textexec = new JTextArea();
-	private JTextArea textQuality = new JTextArea();
-	private JTextArea textComplet = new JTextArea();
 	private Font font1 = new Font("SansSerif", Font.BOLD, 10);
 	private JFrame window = new JFrame();
-	private ListSelectionModel ListSelectionModel1;
 	private JTextField text = new JTextField();
 	private JTextField text5 = new JTextField();
-	private JTextArea textSR = new JTextArea();
-	JCheckBox check1 = new JCheckBox();
-	JCheckBox check2 = new JCheckBox();
+	private JCheckBox check1 = new JCheckBox();
+	private JCheckBox check2 = new JCheckBox();
+	
 
     private int ref = 0;
 
@@ -144,8 +138,7 @@ public class Fenetre extends JFrame {
 		this.setContentPane(panPrin);
 		this.setVisible(true);
 
-		JOptionPane jop = new JOptionPane();   
-		int option = jop.showConfirmDialog(null, "Pour que l'utilitaire fonctionne avec la derniere version des synoptiques,\n il est necessaire d'effectuer une recherche complete. Souhaitez vous demarrer la recherche ?", "Demarrage de l'utilitaire", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		int option = JOptionPane.showConfirmDialog(null, "Pour que l'utilitaire fonctionne avec la derniere version des synoptiques,\n il est necessaire d'effectuer une recherche complete. Souhaitez vous demarrer la recherche ?", "Demarrage de l'utilitaire", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 		if(option == JOptionPane.OK_OPTION){
 			execAction();
 		}
@@ -423,7 +416,6 @@ public class Fenetre extends JFrame {
 	private void showComplete() {
 		panMenu5.removeAll();
 		JTextArea textComplet = new JTextArea();
-		
 		getControle();
 		String API = "";
 		String CHMACQ = "";
@@ -641,6 +633,7 @@ public class Fenetre extends JFrame {
 									reponse = JOptionPane.showConfirmDialog(null, "Etes vous sur de valider le remplacement ?", "Information", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 									textexec.selectAll();
 									textexec.setText("");
+									brTest.close();
 								}
 								if(start == 0 && reponse == 0)
 								{
@@ -660,7 +653,7 @@ public class Fenetre extends JFrame {
 						}
 					}
 				}
-
+				
 			}
 		}
 	}
@@ -905,7 +898,7 @@ public class Fenetre extends JFrame {
 		panPrin.revalidate();
 	}
 	
-	class SharedListSelectionHandler implements ListSelectionListener {
+/*	class SharedListSelectionHandler implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent e) { 
             ListSelectionModel lsm = (ListSelectionModel)e.getSource();
  
@@ -927,7 +920,7 @@ public class Fenetre extends JFrame {
             }
 
         }
-    }
+    }*/
 	
 	private static String readFileAsString(String filePath) throws java.io.IOException{
 
