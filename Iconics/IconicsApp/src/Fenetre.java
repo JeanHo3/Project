@@ -59,30 +59,30 @@ public class Fenetre extends JFrame {
 	private static final long serialVersionUID = 8134034113775260241L;
 	private static final DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-	//Paramètres de la fenêtre d'application
+	//Paramï¿½tres de la fenï¿½tre d'application
 	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	private double width = screenSize.getWidth();
 	private double height = screenSize.getHeight();
 
-	//Paramètres des chemins des folders de l'application + liste des files
+	//Paramï¿½tres des chemins des folders de l'application + liste des files
 	String cheminSource = "";
 	String cheminDestination = "";
 	final Collection<File> all = new ArrayList<File>();
 
-	//Paramètres des objets du menu
+	//Paramï¿½tres des objets du menu
 	private JMenuBar menuBar = new JMenuBar();
 	private JMenu menu1 = new JMenu("Fichier");
 	private JMenu menu2 = new JMenu("Recherche");
 	private JMenuItem item1 = new JMenuItem("Visualiser");
 	private JMenuItem item3 = new JMenuItem("Remplacer");
-	private JMenuItem item4 = new JMenuItem("Contrôler");
+	private JMenuItem item4 = new JMenuItem("Controler");
 	private JMenuItem item5 = new JMenuItem("Cross References");
 	private JMenuItem item11 = new JMenuItem("Recherche simple");
 	private JMenuItem item12 = new JMenuItem("Search & Replace simple");
-	private JMenuItem item13 = new JMenuItem("Search & Replace composé");
+	private JMenuItem item13 = new JMenuItem("Search & Replace compose");
 	private int itemnav = 0;
 
-	//Panel d'affichage des données
+	//Panel d'affichage des donnï¿½es
 	private JPanel panPrin = new JPanel();
 	private JPanel pansyno = new JPanel();
 	private JPanel pansymb = new JPanel();
@@ -102,7 +102,7 @@ public class Fenetre extends JFrame {
 	private JPanel panMenu12 = new JPanel();
 	private JPanel panMenu13 = new JPanel();
 
-	//Paramètres d'utilisation globale
+	//Paramï¿½tres d'utilisation globale
 	private List<Synoptique> synoptiques = new ArrayList<Synoptique>();
 	private JComboBox<String> syno = new JComboBox<String>();
 	private JComboBox<String> symb = new JComboBox<String>();
@@ -145,7 +145,7 @@ public class Fenetre extends JFrame {
 		this.setVisible(true);
 
 		JOptionPane jop = new JOptionPane();   
-		int option = jop.showConfirmDialog(null, "Pour que l'utilitaire fonctionne avec la dernière version des synoptiques,\n il est nécessaire d'effectuer une recherche complète. Souhaitez vous démarrer la recherche ?", "Démarrage de l'utilitaire", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		int option = jop.showConfirmDialog(null, "Pour que l'utilitaire fonctionne avec la derniere version des synoptiques,\n il est necessaire d'effectuer une recherche complete. Souhaitez vous demarrer la recherche ?", "Demarrage de l'utilitaire", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 		if(option == JOptionPane.OK_OPTION){
 			execAction();
 		}
@@ -155,7 +155,7 @@ public class Fenetre extends JFrame {
 		
 		//execAction();
 
-		//Ajouts des noms des synoptiques pour accès liste
+		//Ajouts des noms des synoptiques pour accï¿½s liste
 		for(int i=0;i<synoptiques.size();i++) {
 			syno.addItem(synoptiques.get(i).getName().toString());
 		}
@@ -164,31 +164,31 @@ public class Fenetre extends JFrame {
 		//Listener sur le bouton liste synoptique pour MAJ de la liste des smarts symbols
 		syno.addActionListener(new SynoAction());
 		syno.setSelectedItem(1);
-		//Récupération des symboles en fonction du choix utilisateur
+		//Rï¿½cupï¿½ration des symboles en fonction du choix utilisateur
 		getSymboles();
-		//Listener sur le bouton liste smart symboles pour MAJ des propriétés
+		//Listener sur le bouton liste smart symboles pour MAJ des propriï¿½tï¿½s
 		symb.addActionListener(new SmartAction());
 		symb.setSelectedItem(1);
-		//Récupération des propriétés du symbole en fonction du choix utilisateur
+		//Rï¿½cupï¿½ration des propriï¿½tï¿½s du symbole en fonction du choix utilisateur
 		getProperties();
 
-		//Paramétrage de l'affichage du panel synoptique
+		//Paramï¿½trage de l'affichage du panel synoptique
 		pansyno.setLayout(new BoxLayout(pansyno, BoxLayout.LINE_AXIS));
 		pansyno.setPreferredSize(new Dimension((new Dimension(this.getSize())).width-10,30));
 		pansyno.add(syno);
 
-		//Paramétrage de l'affichage du panel symbole
+		//Paramï¿½trage de l'affichage du panel symbole
 		pansymb.setLayout(new BoxLayout(pansymb, BoxLayout.LINE_AXIS));
 		pansymb.setPreferredSize(new Dimension((new Dimension(this.getSize())).width-10,30));
 		pansymb.add(symb);
 
-		//Paramétrage de l'affichage du panel propriétés
+		//Paramï¿½trage de l'affichage du panel propriï¿½tï¿½s
 		panpropt.setLayout(new BoxLayout(panpropt,BoxLayout.LINE_AXIS));
 		panprop.setLayout(new BoxLayout(panprop,BoxLayout.PAGE_AXIS));
 		panprop1.setLayout(new BoxLayout(panprop1,BoxLayout.PAGE_AXIS));
 		panprop2.setLayout(new BoxLayout(panprop2,BoxLayout.PAGE_AXIS));
 		panMap.setLayout(new BoxLayout(panMap,BoxLayout.PAGE_AXIS));
-		//Ajout des items du menu au bandeau de menu de la fenêtre
+		//Ajout des items du menu au bandeau de menu de la fenï¿½tre
 		menu1.add(item1);
 		item1.addActionListener(new VisuAction());
 		//menu1.add(item2);
@@ -212,7 +212,7 @@ public class Fenetre extends JFrame {
 		itemnav = 0;
 		accueil();
 		
-		//Affectation de panPrin au contenu de la fenêtre
+		//Affectation de panPrin au contenu de la fenï¿½tre
 
 	}
 
@@ -225,7 +225,7 @@ public class Fenetre extends JFrame {
 		reprintPanPrin(panMenu0);
 	}
 
-	//Fonction de nettoyage des panels et listes utilisés
+	//Fonction de nettoyage des panels et listes utilisï¿½s
 	private void clearAll(){
 		panprop.removeAll();
 		panprop1.removeAll();
@@ -237,10 +237,10 @@ public class Fenetre extends JFrame {
 	}
 
 	//Fonction getSymboles
-	//- Supprime le contenu des différents panels pour mise à jour
-	//- Recherche les symboles du synoptique selectionné
-	//- Appelle la fonction rempAction() si l'item3 du menu est selectionné
-	//- Appelle la fonction getProperties() si l'item1 du menu est selectionné
+	//- Supprime le contenu des diffï¿½rents panels pour mise ï¿½ jour
+	//- Recherche les symboles du synoptique selectionnï¿½
+	//- Appelle la fonction rempAction() si l'item3 du menu est selectionnï¿½
+	//- Appelle la fonction getProperties() si l'item1 du menu est selectionnï¿½
 	private void getSymboles() {
 		clearAll();
 		symb.removeAllItems();
@@ -257,15 +257,15 @@ public class Fenetre extends JFrame {
 	}
 
 	//Fonction getProperties pour Menu 1
-	//- Supprime le contenu des différents panels pour mise à jour
-	//- Recherche toutes les propriétés du smart symbole selectionné
-	//- Ajoute le tag associé au smart symbole au panel pour l'affichage
-	//- Ajoute les propriétés aux panels pour l'affichage
-	//- Set les paramètres des pannels
-	//- Mets à jour le panel principal
+	//- Supprime le contenu des diffï¿½rents panels pour mise ï¿½ jour
+	//- Recherche toutes les propriï¿½tï¿½s du smart symbole selectionnï¿½
+	//- Ajoute le tag associï¿½ au smart symbole au panel pour l'affichage
+	//- Ajoute les propriï¿½tï¿½s aux panels pour l'affichage
+	//- Set les paramï¿½tres des pannels
+	//- Mets ï¿½ jour le panel principal
 	private void getProperties() {
 			clearAll();
-			prop1.add(new JTextField("Tag associé :"));
+			prop1.add(new JTextField("Tag associe :"));
 			prop.add(new JTextField(synoptiques.get(syno.getSelectedIndex()).getSmartS(symb.getSelectedIndex()).getAssociatedTag()));
 			prop1.add(new JTextField("Position X :"));
 			prop.add(new JTextField(String.valueOf(synoptiques.get(syno.getSelectedIndex()).getSmartS(symb.getSelectedIndex()).getX())));
@@ -299,11 +299,11 @@ public class Fenetre extends JFrame {
 	}
 
 	//Fonction rempAction pour Menu 3
-	//- Supprime le contenu des différents panels pour mise à jour
+	//- Supprime le contenu des diffï¿½rents panels pour mise ï¿½ jour
 	//- Ajoute trois colonnes avec les informations suivantes :
-	//		1- Le keyword et le nom de tous les symboles recenssé pour le synoptique selectionné
-	//		2- Le tag associé au smart symbol
-	//		3- Une colonne vide pour indiquer le nouveau tag du smart symbole (remplace alors le tag associé par ce dernier)
+	//		1- Le keyword et le nom de tous les symboles recenssï¿½ pour le synoptique selectionnï¿½
+	//		2- Le tag associï¿½ au smart symbol
+	//		3- Une colonne vide pour indiquer le nouveau tag du smart symbole (remplace alors le tag associï¿½ par ce dernier)
 	private void rempAction() {
 			clearAll();
 			for(int i=0;i<synoptiques.get(syno.getSelectedIndex()).getNbSSIn();i++) {
@@ -343,7 +343,7 @@ public class Fenetre extends JFrame {
 	}
 
 	private void getControle() {
-		//Sélection de la référence sur le synoptique Symboles OptimisésV2 -> Ajouter aux paramètres
+		//Sï¿½lection de la rï¿½fï¿½rence sur le synoptique Symboles Optimisï¿½sV2 -> Ajouter aux paramï¿½tres
 		for(int i=0;i<this.synoptiques.size();i++) {
 				this.synoptiques.get(i).controlQuality(this.synoptiques.get(ref).getListeK(), this.synoptiques.get(ref).getListeC());
 		}
@@ -373,7 +373,7 @@ public class Fenetre extends JFrame {
             textQuality.selectAll();
             bufferedWriter.write(textQuality.getSelectedText());
             bufferedWriter.close();
-            JOptionPane.showMessageDialog(null, "Le fichier " + fileName + " a été ajouté au dossier :\n" + this.cheminDestination, "Information", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Le fichier " + fileName + " a ete ajoute au dossier :\n" + this.cheminDestination, "Information", JOptionPane.INFORMATION_MESSAGE);
         }
         catch(IOException ex) {
             System.out.println("Error writing to file '"+ fileName + "'");
@@ -430,7 +430,7 @@ public class Fenetre extends JFrame {
 		String CHMALM = "";
 		textComplet.selectAll();
 		textComplet.replaceSelection("");
-		textComplet.append("Nom du synoptique;Nom du symbole;Valide;Tag Associé;ShareKeyword;CustomData de référence;CustomData du synoptique;Position X;Position Y;API Associé;CHM_ACQ Associé;CHM_ALM Associé");
+		textComplet.append("Nom du synoptique;Nom du symbole;Valide;Tag Associe;ShareKeyword;CustomData de reference;CustomData du synoptique;Position X;Position Y;API Associe;CHM_ACQ Associe;CHM_ALM Associe");
 		for(int i=0;i<this.synoptiques.size();i++) {
 			for(int j=0;j<this.synoptiques.get(i).getListeSS().size();j++) {
 				textComplet.append("\n" + this.synoptiques.get(i).getName().toString());
@@ -465,7 +465,7 @@ public class Fenetre extends JFrame {
             textComplet.selectAll();
             bufferedWriter.write(textComplet.getSelectedText());
             bufferedWriter.close();
-            JOptionPane.showMessageDialog(null, "Le fichier " + fileName + " a été ajouté au dossier :\n" + this.cheminDestination, "Information", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Le fichier " + fileName + " a ete ajoute au dossier :\n" + this.cheminDestination, "Information", JOptionPane.INFORMATION_MESSAGE);
         }
         catch(IOException ex) {
             System.out.println("Error writing to file '"+ fileName + "'");
@@ -480,9 +480,9 @@ public class Fenetre extends JFrame {
 
 	//Fonction execAction
 	//- Recherche les fichiers des synoptiques dans le chemin Source
-	//- Ajouter à la liste les nouveaux synoptiques
-	//- Effectue la recherche complète sur chacun des fichiers (smart symboles et propriétés associées pour chaque item)
-	//- En sortie, nous avons tous les objects Synoptique, Tag, SmartSymbol et Property nécessaire à l'application
+	//- Ajouter ï¿½ la liste les nouveaux synoptiques
+	//- Effectue la recherche complï¿½te sur chacun des fichiers (smart symboles et propriï¿½tï¿½s associï¿½es pour chaque item)
+	//- En sortie, nous avons tous les objects Synoptique, Tag, SmartSymbol et Property nï¿½cessaire ï¿½ l'application
 	private void execAction() {
 		JTextArea textexec = new JTextArea();
 		
@@ -535,7 +535,7 @@ public class Fenetre extends JFrame {
 		pan.setLayout(new BoxLayout(pan, BoxLayout.LINE_AXIS));
 		pan.setPreferredSize(new Dimension((this.getSize()).width-10,30));
 		JTextField text0 = new JTextField();
-		text0.setText("Texte à  rechercher :");
+		text0.setText("Texte a rechercher :");
 		text0.setBackground(null);
 		text0.setEnabled(false);
 		text0.setPreferredSize(new Dimension(((this.getSize()).width)/3,30));
@@ -566,8 +566,8 @@ public class Fenetre extends JFrame {
 		pan.add(text);
 		pan0.add(pan,BorderLayout.NORTH);
 		if(itemnav == 12) {
-			check1.setText("Application Complète");
-			check2.setText("Sélection de Synoptiques");
+			check1.setText("Application Complete");
+			check2.setText("Selection de Synoptiques");
 			check1.addActionListener(new StateListener());
 			check2.addActionListener(new StateListener());
 			check1.setPreferredSize(new Dimension(1*((this.getSize()).width)/3,30));
@@ -619,7 +619,7 @@ public class Fenetre extends JFrame {
 			}
 			else if (itemnav == 12) {
 				if(text.getText().isEmpty() == true) {
-					JOptionPane.showMessageDialog(null, "Saisissez un texte à  rechercher.", "Information", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Saisissez un texte a rechercher.", "Information", JOptionPane.ERROR_MESSAGE);
 				}
 				if(text.getText().isEmpty() == false && text5.getText().isEmpty() == true && (check1.isSelected() == true || check2.isSelected() == true)) {
 					answer = JOptionPane.showConfirmDialog(null, "Etes vous sur de vouloir remplacer par un texte vide ?", "Information", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -683,7 +683,7 @@ public class Fenetre extends JFrame {
 	}
 
 	//Listener sur la ComboBox listant les synoptiques
-	//En fonction du menu appelant, exécute l'une ou l'autre des fonctions
+	//En fonction du menu appelant, exï¿½cute l'une ou l'autre des fonctions
 	class SynoAction implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			getSymboles();
@@ -691,7 +691,7 @@ public class Fenetre extends JFrame {
 	}
 
 	//Listener sur la ComboBox listant les smart symboles
-	//Execute la fonction getProperties uniquement si item 1 du menu en sélection active
+	//Execute la fonction getProperties uniquement si item 1 du menu en sï¿½lection active
 	class SmartAction implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			if(!(symb.getItemCount()==0)) {
@@ -725,7 +725,7 @@ public class Fenetre extends JFrame {
 	}
 
 	//Listener sur l'item 1 du menu
-	//En fonction du menu appelant, exécute l'une ou l'autre des fonctions
+	//En fonction du menu appelant, exï¿½cute l'une ou l'autre des fonctions
 	class VisuAction implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			itemnav = 1;
@@ -750,7 +750,7 @@ public class Fenetre extends JFrame {
 	}
 
 	//Listener sur l'item 2 du menu
-	//Permet la mise à jour du Panel pour cette action
+	//Permet la mise ï¿½ jour du Panel pour cette action
 	/*class ExecAction implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			panMenu2.removeAll();
@@ -767,7 +767,7 @@ public class Fenetre extends JFrame {
 	}*/
 
 	//Listener sur l'item 3 du menu
-	//En fonction du menu appelant, exécute l'une ou l'autre des fonctions
+	//En fonction du menu appelant, exï¿½cute l'une ou l'autre des fonctions
 	class RempAction implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			itemnav = 3;
@@ -944,7 +944,7 @@ public class Fenetre extends JFrame {
 	}
 
 	//Fonction findFilesRecursively
-	//- Recherche selon une méthode récursive tous les fichiers .gdfx contenu dans le repértoire cheminSource
+	//- Recherche selon une mï¿½thode rï¿½cursive tous les fichiers .gdfx contenu dans le repï¿½rtoire cheminSource
 	private static void findFilesRecursively(File file, Collection<File> all, final String extension) {
 		//Liste des fichiers correspondant a l'extension souhaitee
 		final File[] children = file.listFiles(new FileFilter() {

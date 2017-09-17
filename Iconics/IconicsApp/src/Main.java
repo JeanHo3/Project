@@ -18,7 +18,7 @@ public class Main {
 		JFrame frame = new JFrame("");
 		JFileChooser chooser = new JFileChooser();
 		chooser.setCurrentDirectory(new java.io.File("."));
-		chooser.setDialogTitle("Sélection du repértoire des sources .gdfx");
+		chooser.setDialogTitle("Selection du repertoire des sources .gdfx");
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		chooser.setAcceptAllFileFilterUsed(false);
 		frame.getContentPane().add(chooser,"Center");
@@ -29,8 +29,8 @@ public class Main {
 			String str = chooser.getSelectedFile().getAbsolutePath();
 			System.out.println(str);
 			File f = new File(str);
-			String str2 = "Le dossier \n" + str + "\n" + " est vide.\nPar conséquent, l'utilitaire ne peut pas fonctionner.\nPlacez-y les sources .gdfx de l'application Iconics et relancez l'utilitaire.";
-			String str3 = "Le dossier \n" + str + "\n" + " ne contient pas de gdfx.\nPar conséquent, l'utilitaire ne peut pas fonctionner.\nPlacez-y les sources .gdfx de l'application Iconics et relancez l'utilitaire.";
+			String str2 = "Le dossier \n" + str + "\n" + " est vide.\nPar consequent, l'utilitaire ne peut pas fonctionner.\nPlacez-y les sources .gdfx de l'application Iconics et relancez l'utilitaire.";
+			String str3 = "Le dossier \n" + str + "\n" + " ne contient pas de gdfx.\nPar consequent, l'utilitaire ne peut pas fonctionner.\nPlacez-y les sources .gdfx de l'application Iconics et relancez l'utilitaire.";
 			if (f.list().length == 0) {
 				JOptionPane.showMessageDialog(null,str2, "Information", JOptionPane.ERROR_MESSAGE);
 				System.exit(0);
@@ -53,7 +53,7 @@ public class Main {
 			}
 		}
 		else {
-			JOptionPane.showMessageDialog(null,"Aucun fichier selectionné", "Information", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null,"Aucun fichier selectionnexs", "Information", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}
 
