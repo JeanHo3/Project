@@ -1,0 +1,6 @@
+1 - Mettre a jour l'affichage des zones de texte vers un format Excel (tableau)
+2 - Terminer la recherche simple : selection des synoptiques
+3 - Ajouter une fonction de chargement d'un fichier Excel de BDD avec verification contenu
+		Thread de chargement
+		Verification du contenu en fin de thread (une ou plusieurs procedures avec etat du controle)
+		Chargement des tags par feuille et creation des objets Tags (references independamment des synoptiques)
