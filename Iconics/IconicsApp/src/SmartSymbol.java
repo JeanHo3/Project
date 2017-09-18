@@ -143,9 +143,9 @@ public class SmartSymbol {
 
 	public String descriptionRet() {
 		if(!(this.customData.isEmpty()))
-			return ("\rSmart Symbol N" + this.idp + " - Nom = " + this.name + ", Keyword = " + this.keyword + ", Custom Data = " + this.customData + ".\r-- Tag associé : " + this.associatedTag);
+			return ("\rSmart Symbol N" + this.idp + " - Nom = " + this.name + ", Keyword = " + this.keyword + ", Custom Data = " + this.customData + ".\r-- Tag associÃ© : " + this.associatedTag);
 		else
-			return ("\rSmart Symbol N" + this.idp + " - Nom = " + this.name + ", Keyword = " + this.keyword + ".\r-- Tag associé : " + this.associatedTag);
+			return ("\rSmart Symbol N" + this.idp + " - Nom = " + this.name + ", Keyword = " + this.keyword + ".\r-- Tag associÃ© : " + this.associatedTag);
 	}
 
 	public String descriptionPropertiesRet() {
