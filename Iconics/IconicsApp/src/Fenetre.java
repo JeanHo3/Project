@@ -505,6 +505,12 @@ public class Fenetre extends JFrame {
 				for(int i=0;i<listeExec.size();i++) {
 					if (listeExec.get(i).getState()==State.TERMINATED) {
 						System.out.println("Thread " + listeExec.get(i).getName() + " terminé.");
+						try {
+							listeExec.get(i).join();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						listeExec.remove(i);
 					}
 				}
@@ -514,6 +520,12 @@ public class Fenetre extends JFrame {
 			for(int i=0;i<listeExec.size();i++) {
 				if (listeExec.get(i).getState()==State.TERMINATED) {
 					System.out.println("Thread " + listeExec.get(i).getName() + " terminé.");
+					try {
+						listeExec.get(i).join();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					listeExec.remove(i);
 				}
 			}
