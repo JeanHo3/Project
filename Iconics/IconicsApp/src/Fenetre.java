@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.Thread.State;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -43,6 +44,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -114,6 +116,7 @@ public class Fenetre extends JFrame {
 	private JCheckBox check1 = new JCheckBox();
 	private JCheckBox check2 = new JCheckBox();
 	
+	private List<ThreadExec> listeExec = new ArrayList<ThreadExec>();
 
     private int ref = 0;
 
@@ -476,21 +479,6 @@ public class Fenetre extends JFrame {
 	//- Effectue la recherche complï¿½te sur chacun des fichiers (smart symboles et propriï¿½tï¿½s associï¿½es pour chaque item)
 	//- En sortie, nous avons tous les objects Synoptique, Tag, SmartSymbol et Property nï¿½cessaire ï¿½ l'application
 	private void execAction() {
-		JTextArea textexec = new JTextArea();
-		
-		textexec.selectAll();
-		textexec.replaceSelection("");
-		
-
-		JScrollPane panMenu2sc = new JScrollPane(textexec);
-
-		panMenu2sc.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		panMenu2sc.setPreferredSize(new Dimension((int)this.getSize().width-10,(int)this.getSize().height-80));
-		panMenu2sc.setAutoscrolls(true);
-
-		DefaultCaret caret = (DefaultCaret)textexec.getCaret();
-		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-		panMenu2.add(panMenu2sc);
 
 		findFilesRecursively(new File(cheminSource), all, ".gdfx");
 
@@ -498,16 +486,45 @@ public class Fenetre extends JFrame {
 			this.synoptiques.add(new Synoptique(file11.getName().substring(0, file11.getName().toString().length() - 5),file11.getAbsolutePath()));
 		}
 		getControle();
+		
+		JProgressBar pbar = new JProgressBar();
+		pbar.setMinimum(0);
+		pbar.setMaximum(this.synoptiques.size());
+		panMenu2.add(pbar);
+		reprintPanPrin(panMenu2);
+		
+		int j = 0;
+		while(j<this.synoptiques.size()) {
+			if (listeExec.size()<4) {
+				System.out.println("Ajout Thread " + this.synoptiques.get(j).getName() + " - " + j + " - " + this.synoptiques.size());
+				listeExec.add(this.synoptiques.get(j).alternativeFindSmart());
+				pbar.setValue(j);
+				j++;
+			}
+			else {
+				for(int i=0;i<listeExec.size();i++) {
+					if (listeExec.get(i).getState()==State.TERMINATED) {
+						System.out.println("Thread " + listeExec.get(i).getName() + " terminé.");
+						listeExec.remove(i);
+					}
+				}
+			}
+		}
+		while(listeExec.isEmpty()==false) {
+			for(int i=0;i<listeExec.size();i++) {
+				if (listeExec.get(i).getState()==State.TERMINATED) {
+					System.out.println("Thread " + listeExec.get(i).getName() + " terminé.");
+					listeExec.remove(i);
+				}
+			}
+		}
+		
+		
 		for (int i = 0;i<this.synoptiques.size();i++){
-
 			if(this.synoptiques.get(i).getName().toString().equals("Symboles OptimisesV2")) {
 				this.synoptiques.get(i).setReference(true);
 				this.ref = i;
 			}
-
-			this.synoptiques.get(i).findSmartSymbols();
-			textexec.append("Synoptique " + this.synoptiques.get(i).getName().toString() + ", " + this.synoptiques.get(i).getNbSSIn() + " smart symboles, " + this.synoptiques.get(i).getNbTagsIn() + " tags.\n");
-			reprintPanPrin(panMenu2);
 		}
 	}
 	

@@ -1,19 +1,9 @@
-
 import java.awt.Color;
-import java.io.BufferedInputStream;
-//import java.io.BufferedReader;
 import java.io.BufferedWriter;
-//import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-//import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-//import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Synoptique {
 	private String name;
@@ -48,6 +38,26 @@ public class Synoptique {
 		id++;
 		this.idp = id;
 		this.isReference = false;
+	}
+	
+	public void addTagInList(Tag tag) {
+		this.tagsIn.add(tag);
+	}
+	
+	public int getSmartSize() {
+		return this.smartSymbolsIn.size();
+	}
+	
+	public SmartSymbol getOneSmart(int index) {
+		return this.smartSymbolsIn.get(index);
+	}
+	
+	public void addKeywordInList(String keyword) {
+		this.listeKeyword.add(keyword);
+	}
+	
+	public void addCustomInList(String customD) {
+		this.listeCustomData.add(customD);
 	}
 
 	public List<String> getListeInval(){
@@ -132,7 +142,6 @@ public class Synoptique {
 			bw.write("\rListe des smarts symboles :");
 			bw.write("\r---------------------------");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		for (int i=0;i<this.smartSymbolsIn.size();i++) {
@@ -143,7 +152,6 @@ public class Synoptique {
 				bw.write(l);
 				bw.write(g);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -166,83 +174,10 @@ public class Synoptique {
 			this.controlg.fillCell(l, m, col);
 		}
 	}
-
-	public void findSmartSymbols() {
-		try{
-			String mnemo = "";
-			String API = "";
-			String fileContent = readFileAsString(this.path);
-			Matcher l = Pattern.compile("<gwx:SmartSymbol Name=.+Keyword=.+>").matcher(fileContent);
-			while (!(l.hitEnd()))   {
-				if(l.find()) {
-					int a = l.start();
-					Matcher name = Pattern.compile("<gwx:SmartSymbol Name=\"(.*?)\"").matcher(l.group(0));
-					Matcher customData = Pattern.compile("Tag=\"(.*?)\"").matcher(l.group(0));
-					Matcher keyword = Pattern.compile("gwx:GwxProperties.Keyword=\"(.*?)\"").matcher(l.group(0));
-					name.find();
-					keyword.find();
-					customData.find();
-					if(!(customData.hitEnd())) {
-						addSmartSymbolIn (name.group(1),keyword.group(1),customData.group(1));
-						this.listeCustomData.add(customData.group(1));
-						this.listeKeyword.add(keyword.group(1));
-					}
-					else {
-						addSmartSymbolIn (name.group(1),keyword.group(1),"");
-						this.listeCustomData.add("");
-						this.listeKeyword.add(keyword.group(1));
-					}
-					Matcher getProperties = Pattern.compile("</gwx:SmartSymbol.PropertyDefinitions>").matcher(fileContent);
-					Matcher end = Pattern.compile("</gwx:SmartSymbol>").matcher(fileContent);
-					end.find(a);
-					int g = end.start();
-					getProperties.find(a);
-					if(!(getProperties.hitEnd())) {
-						int b = getProperties.start();
-						if(b<g) {
-							String toProperties = fileContent.substring(a, b);
-							this.smartSymbolsIn.get(smartSymbolsIn.size()-1).findProperties(toProperties);
-							mnemo = this.smartSymbolsIn.get(smartSymbolsIn.size()-1).findTags();
-							if (!(mnemo.equals(""))) {
-								API = mnemo.substring(0, 3);
-								mnemo = mnemo.substring(3);
-								if (mnemo.length() == 22)
-									this.tagsIn.add(new Tag(mnemo,API,false,false));
-								if (mnemo.length() == 26)
-									this.tagsIn.add(new Tag(mnemo,API,false,true));
-							}
-						}
-					}
-					Matcher getX = Pattern.compile("Canvas.Left=\"(.*?)\"").matcher(fileContent);
-					Matcher getY = Pattern.compile("Canvas.Top=\"(.*?)\"").matcher(fileContent);
-
-
-					double x = 0.0;
-					double y = 0.0;
-					int r = a;
-					while((x<=0.0 || y<=0.0) && !(r>g)) {
-						getX.find(r);
-						int c = getX.start();
-						getY.find(c);
-						r = getX.end();
-						x = Double.parseDouble(getX.group(1));
-						y = Double.parseDouble(getY.group(1));
-					}
-					if((x<=0.0 || x>1950.0) && (y<=0.0 || y>1950.0)){
-						this.smartSymbolsIn.get(smartSymbolsIn.size()-1).setgetX(0.0);
-						this.smartSymbolsIn.get(smartSymbolsIn.size()-1).setgetY(0.0);
-					}
-					else {
-						this.smartSymbolsIn.get(smartSymbolsIn.size()-1).setgetX(Double.parseDouble(getX.group(1)));
-						this.smartSymbolsIn.get(smartSymbolsIn.size()-1).setgetY(Double.parseDouble(getY.group(1)));
-					}
-				}
-			}
-		}catch (Exception e){//Catch exception if any
-			System.err.println("Error: " + e.getMessage() + " //" + getName());
-		}
-		getNbTagsIn();
-		ajoutPoint();
+	
+	public ThreadExec alternativeFindSmart() {
+		ThreadExec runThread = new ThreadExec(this);
+		return runThread;
 	}
 
 	//	public Map<String, Object[]> addToDatas(Map<String, Object[]> data) {
@@ -279,20 +214,4 @@ public class Synoptique {
 	private void countSmartSymbolsIn() {	//Fonction de comptage du nombre de Smart Symbol sur le Synoptique
 		this.nbSmartSymbolsIn = smartSymbolsIn.size();
 	}
-
-	//Instance pour lire un fichier comme une chaine de caract�re (�quivalent tampon pour regex)
-	private static String readFileAsString(String filePath) throws java.io.IOException{
-
-		byte[] buffer = new byte[(int) new File(filePath).length()];
-		BufferedInputStream f = null;
-
-		try {
-			f = new BufferedInputStream(new FileInputStream(filePath));
-			f.read(buffer);
-		} finally {
-			if (f != null) try { f.close(); } catch (IOException ignored) { }
-		}
-		return new String(buffer);
-	}
-	//-----------------------------------------------------------------------------------------------------
 }
