@@ -43,7 +43,10 @@ function handleRead(){
 
 		//On lit les données du Arduino (humidité,température,moisture)
 		devices[0].readBytes(null,17,function(err,res){
-			if(err) console.log("Erreur de lecture Arduino");
+			if(err){
+				console.log("Erreur de lecture Arduino : ");
+				console.log(err);
+			}
 			else{
 				getdatas = res.toString('ascii');
 				getdatas = getdatas.split(";");
