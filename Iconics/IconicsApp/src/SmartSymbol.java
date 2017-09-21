@@ -1,9 +1,14 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SmartSymbol {
+public class SmartSymbol implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5009131175802640877L;
 	private String name;
 	private String keyword;
 	private String customData;

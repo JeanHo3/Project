@@ -1,11 +1,16 @@
 import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Synoptique {
+public class Synoptique implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5627159207755078681L;
 	private String name;
 	private String path;
 	private int nbTagsIn;

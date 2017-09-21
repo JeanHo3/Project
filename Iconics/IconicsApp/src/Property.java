@@ -1,5 +1,10 @@
+import java.io.Serializable;
 
-public class Property {
+public class Property implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4211641490033964171L;
 	private String name;
 	private String value;
 	private String type;

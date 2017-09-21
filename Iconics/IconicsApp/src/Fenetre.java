@@ -6,19 +6,21 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-//import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.Thread.State;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -31,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -54,8 +55,11 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.text.DefaultCaret;
 
 public class Fenetre extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3504631783859510644L;
 
-	private static final long serialVersionUID = 8134034113775260241L;
 	private static final DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
 	//Paramï¿½tres de la fenï¿½tre d'application
@@ -380,41 +384,6 @@ public class Fenetre extends JFrame {
 		panMenu4.add(panMenu4sc);
 		reprintPanPrin(panMenu4);
 	}
-	/*
-	private void showQualityBySmart() {
-		String[] listData = null;
-		for(int i = 0; i < this.synoptiques.size(); i++) listData[i]=this.synoptiques.get(i).getName().toString();
-		JList list = new JList(listData);
-		ListSelectionModel1 = list.getSelectionModel();
-		ListSelectionModel1.addListSelectionListener(
-				new SharedListSelectionHandler());
-		JScrollPane listPane = new JScrollPane(list);
-		
-		textQuality.selectAll();
-		textQuality.replaceSelection("");
-		for(String getK : this.synoptiques.get(ref).getListeK()) textQuality.append(";" + getK.toString());
-		
-		for(Synoptique getS : this.synoptiques) {
-			textQuality.append("\n" + getS.getName().toString());
-			for(String getK : this.synoptiques.get(ref).getListeK()) {
-				if(getS.getListeInval().contains(getK.toString())) textQuality.append(";X");
-				else textQuality.append(";");
-			}
-		}
-		/*for(String getK : this.synoptiques.get(ref).getListeK()) {
-			textQuality.append("\n" + getK.toString());
-			for(Synoptique getSyn : this.synoptiques) {
-				if(getSyn.getListeInval().contains(getK.toString())) textQuality.append(";" + getSyn.getName().toString());
-				else textQuality.append(";");
-			}
-		}
-		JScrollPane panMenu4sc = new JScrollPane(textQuality);
-		panMenu4sc.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		panMenu4.setPreferredSize(new Dimension((int)this.getSize().width-10,(int)this.getSize().height-80));
-		panMenu4.add(pansyno);
-		panMenu4.add(panMenu4sc);
-		reprintPanPrin(panMenu4);
-	}*/
 
 	private void showComplete() {
 		panMenu5.removeAll();
@@ -479,6 +448,8 @@ public class Fenetre extends JFrame {
 	//- Effectue la recherche complï¿½te sur chacun des fichiers (smart symboles et propriï¿½tï¿½s associï¿½es pour chaque item)
 	//- En sortie, nous avons tous les objects Synoptique, Tag, SmartSymbol et Property nï¿½cessaire ï¿½ l'application
 	private void execAction() {
+		ObjectOutputStream oos;
+		ObjectInputStream ois;
 
 		findFilesRecursively(new File(cheminSource), all, ".gdfx");
 
@@ -495,8 +466,12 @@ public class Fenetre extends JFrame {
 		
 		int j = 0;
 		while(j<this.synoptiques.size()) {
+			if(this.synoptiques.get(j).getName().toString().equals("Symboles OptimisesV2")) {
+				this.synoptiques.get(j).setReference(true);
+				this.ref = j;
+			}
+			
 			if (listeExec.size()<4) {
-				System.out.println("Ajout Thread " + this.synoptiques.get(j).getName() + " - " + j + " - " + this.synoptiques.size());
 				listeExec.add(this.synoptiques.get(j).alternativeFindSmart());
 				pbar.setValue(j);
 				j++;
@@ -504,11 +479,9 @@ public class Fenetre extends JFrame {
 			else {
 				for(int i=0;i<listeExec.size();i++) {
 					if (listeExec.get(i).getState()==State.TERMINATED) {
-						System.out.println("Thread " + listeExec.get(i).getName() + " terminé.");
 						try {
 							listeExec.get(i).join();
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						listeExec.remove(i);
@@ -519,7 +492,6 @@ public class Fenetre extends JFrame {
 		while(listeExec.isEmpty()==false) {
 			for(int i=0;i<listeExec.size();i++) {
 				if (listeExec.get(i).getState()==State.TERMINATED) {
-					System.out.println("Thread " + listeExec.get(i).getName() + " terminé.");
 					try {
 						listeExec.get(i).join();
 					} catch (InterruptedException e) {
@@ -531,13 +503,26 @@ public class Fenetre extends JFrame {
 			}
 		}
 		
-		
-		for (int i = 0;i<this.synoptiques.size();i++){
-			if(this.synoptiques.get(i).getName().toString().equals("Symboles OptimisesV2")) {
-				this.synoptiques.get(i).setReference(true);
-				this.ref = i;
+
+		try {
+			oos = new ObjectOutputStream( new BufferedOutputStream ( new FileOutputStream( new File(cheminSource + "backup_smarts.txt"))));
+			for(int i =0;i<this.synoptiques.size();i++) {
+				oos.writeObject(this.synoptiques.get(i));
 			}
+			oos.close();
+			ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(new  File(cheminSource + "backup_smarts.txt"))));
+			for(int i=0;i<this.synoptiques.size();i++) {
+				try {
+					System.out.println(((Synoptique)ois.readObject()));
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+		}catch (IOException e) {
+			e.printStackTrace();
 		}
+		
+
 	}
 	
 	private void Research(JPanel pan0) {
@@ -770,23 +755,6 @@ public class Fenetre extends JFrame {
 			setMenuColor();
 		}
 	}
-
-	//Listener sur l'item 2 du menu
-	//Permet la mise ï¿½ jour du Panel pour cette action
-	/*class ExecAction implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-			panMenu2.removeAll();
-			itemnav = 2;
-			menu1.setText(item2.getText());
-			panMenu0.setVisible(false);
-			panMenu1.setVisible(false);
-			panMenu2.setVisible(true);
-			panMenu3.setVisible(false);
-			panMenu4.setVisible(false);
-			panMenu5.setVisible(false);
-			execAction();
-		}
-	}*/
 
 	//Listener sur l'item 3 du menu
 	//En fonction du menu appelant, exï¿½cute l'une ou l'autre des fonctions
