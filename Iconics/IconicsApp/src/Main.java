@@ -20,7 +20,6 @@ public class Main {
 		frame.getContentPane().add(chooser,"Center");
 		frame.setSize(chooser.getPreferredSize());
 
-		
 		if(chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
 			String str = chooser.getSelectedFile().getAbsolutePath();
 			System.out.println(str);
