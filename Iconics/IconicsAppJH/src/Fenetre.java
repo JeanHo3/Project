@@ -114,7 +114,8 @@ public class Fenetre extends JFrame {
 		this.setSize(880,805);
 		this.setLocation(((int)width/2)-440, ((int)height/2)-402);
 		this.window.setLocation((int)width-970, 0);
-		this.cheminDestination = (chemin);
+		int lio = chemin.lastIndexOf("/");
+		this.cheminDestination = chemin.substring(0,lio) + "/";
 		this.cheminSource = (chemin);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -454,13 +455,12 @@ public class Fenetre extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			if(new File(cheminSource + "/PopUp/").exists()) {
 				ArrayList<String> str = new ArrayList<String>();
+				ArrayList<String> listePop = new ArrayList<String>();
 				findFilesRecursively(new File(cheminSource + "/PopUp/"),allPop,".gdfx");
 				int i = 0;
 				for(File file12 : allPop) {
+					listePop.add(file12.getName().toString());
 					str.add(file12.getName().toString());
-
-					System.out.println(str.get(i));
-					i++;
 				}
 				
 				textexec.selectAll();
@@ -479,18 +479,12 @@ public class Fenetre extends JFrame {
 					//CONTROLES ET ECRITURE
 					for(File file11 : all){
 						i = 0;
-						String strb = "";
-						//System.out.println(file11.getName());
 						Path path = Paths.get(file11.getPath());
 						Charset charset = StandardCharsets.UTF_8;
 						String content = new String(Files.readAllBytes(path), charset);
-						for(File file12 : allPop) {
-							if(content.contains(file12.getName().substring(0, file12.getName().length()-5))) {
-								strb = str.get(i).toString();
-								str.remove(i);
-								str.add(i,strb.concat(";" + file11.getName().toString()));
-								System.out.println(str.get(i).toString());
-								//System.out.println("\t" + file12.getName());
+						for(String strin : listePop) {
+							if(content.contains(strin.substring(0, strin.length()-5))) {
+								str.set(i,str.get(i).toString() + ";" + file11.getName().toString());
 							}
 							i++;
 						}
