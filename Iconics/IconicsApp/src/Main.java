@@ -50,7 +50,6 @@ public class Main {
 			}
 		}
 		else {
-			JOptionPane.showMessageDialog(null,"Aucun fichier selectionne", "Information", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}
 

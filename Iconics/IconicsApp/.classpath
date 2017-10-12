@@ -15,5 +15,10 @@
 	<classpathentry kind="lib" path="D:/Users/Jean.HOURMANT/Desktop/Code/Iconics/poi-3.16/poi-ooxml-schemas-3.16.jar"/>
 	<classpathentry kind="lib" path="D:/Users/Jean.HOURMANT/Desktop/Code/Iconics/poi-3.16/poi-scratchpad-3.16.jar"/>
 	<classpathentry kind="lib" path="D:/Users/Jean.HOURMANT/Desktop/Code/Iconics/poi-3.16/xmlbeans-2.6.0.jar"/>
+	<classpathentry kind="lib" path="D:/Users/Jean.HOURMANT/Desktop/Code/Iconics/poi-3.16/commons-lang3-3.6.jar"/>
+	<classpathentry kind="lib" path="D:/Users/Jean.HOURMANT/Desktop/Code/Iconics/poi-3.16/commons-lang3-3.6-javadoc.jar"/>
+	<classpathentry kind="lib" path="D:/Users/Jean.HOURMANT/Desktop/Code/Iconics/poi-3.16/commons-lang3-3.6-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Users/Jean.HOURMANT/Desktop/Code/Iconics/poi-3.16/commons-lang3-3.6-tests.jar"/>
+	<classpathentry kind="lib" path="D:/Users/Jean.HOURMANT/Desktop/Code/Iconics/poi-3.16/commons-lang3-3.6-test-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

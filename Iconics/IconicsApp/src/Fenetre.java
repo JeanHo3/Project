@@ -2,12 +2,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -54,38 +51,32 @@ import javax.swing.ScrollPaneConstants;
 
 import javax.swing.text.DefaultCaret;
 
+import org.apache.commons.lang3.StringUtils;
+
+
 public class Fenetre extends JFrame {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3504631783859510644L;
 
 	private static final DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-	//Param�tres de la fen�tre d'application
 	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	private double width = screenSize.getWidth();
 	private double height = screenSize.getHeight();
 
-	//Param�tres des chemins des folders de l'application + liste des files
 	String cheminSource = "";
 	String cheminDestination = "";
 	final Collection<File> all = new ArrayList<File>();
+	final Collection<File> allPop = new ArrayList<File>();
 
-	//Param�tres des objets du menu
 	private JMenuBar menuBar = new JMenuBar();
 	private JMenu menu1 = new JMenu("Fichier");
 	private JMenu menu2 = new JMenu("Recherche");
 	private JMenuItem item1 = new JMenuItem("Visualiser");
-	private JMenuItem item3 = new JMenuItem("Remplacer");
-	private JMenuItem item4 = new JMenuItem("Controler");
 	private JMenuItem item5 = new JMenuItem("Cross References");
 	private JMenuItem item11 = new JMenuItem("Recherche simple");
 	private JMenuItem item12 = new JMenuItem("Search & Replace simple");
-	private JMenuItem item13 = new JMenuItem("Search & Replace compose");
 	private int itemnav = 0;
 
-	//Panel d'affichage des donnees
 	private JPanel panPrin = new JPanel();
 	private JPanel pansyno = new JPanel();
 	private JPanel pansymb = new JPanel();
@@ -93,19 +84,13 @@ public class Fenetre extends JFrame {
 	private JPanel panprop1 = new JPanel();
 	private JPanel panprop2 = new JPanel();
 	private JPanel panpropt = new JPanel();
-	private JPanel panMap = new JPanel();
-
 	private JPanel panMenu0 = new JPanel();
 	private JPanel panMenu1 = new JPanel();
 	private JPanel panMenu2 = new JPanel();
-	private JPanel panMenu3 = new JPanel();
-	private JPanel panMenu4 = new JPanel();
 	private JPanel panMenu5 = new JPanel();
 	private JPanel panMenu11 = new JPanel();
 	private JPanel panMenu12 = new JPanel();
-	private JPanel panMenu13 = new JPanel();
 
-	//Param�tres d'utilisation globale
 	private List<Synoptique> synoptiques = new ArrayList<Synoptique>();
 	private JComboBox<String> syno = new JComboBox<String>();
 	private JComboBox<String> symb = new JComboBox<String>();
@@ -124,14 +109,11 @@ public class Fenetre extends JFrame {
 
     private int ref = 0;
 
-	//Constructeur
 	public Fenetre(String chemin) {
 		this.setTitle("Utilitaires pour l'application Iconics");
-		//this.setSize((int)width/3, (int)height);
 		this.setSize(880,805);
 		this.setLocation(((int)width/2)-440, ((int)height/2)-402);
 		this.window.setLocation((int)width-970, 0);
-		//this.addComponentListener(new componentAction());
 		this.cheminDestination = (chemin);
 		this.cheminSource = (chemin);
 		this.setResizable(false);
@@ -141,7 +123,6 @@ public class Fenetre extends JFrame {
 
 	//Initialisation de l'affichage
 	public void initialize1() {
-		//Chargement des items par lecture des fichiers de l'application
 		this.setContentPane(panPrin);
 		this.setVisible(true);
 
@@ -152,51 +133,34 @@ public class Fenetre extends JFrame {
 		else {
 			System.exit(0);
 		}
-		
-		//execAction();
 
-		//Ajouts des noms des synoptiques pour acc�s liste
 		for(int i=0;i<synoptiques.size();i++) {
 			syno.addItem(synoptiques.get(i).getName().toString());
 		}
 		itemnav=1;
 
-		//Listener sur le bouton liste synoptique pour MAJ de la liste des smarts symbols
 		syno.addActionListener(new SynoAction());
 		syno.setSelectedItem(1);
-		//R�cup�ration des symboles en fonction du choix utilisateur
 		getSymboles();
-		//Listener sur le bouton liste smart symboles pour MAJ des propri�t�s
 		symb.addActionListener(new SmartAction());
 		symb.setSelectedItem(1);
-		//R�cup�ration des propri�t�s du symbole en fonction du choix utilisateur
 		getProperties();
 
-		//Param�trage de l'affichage du panel synoptique
 		pansyno.setLayout(new BoxLayout(pansyno, BoxLayout.LINE_AXIS));
 		pansyno.setPreferredSize(new Dimension((new Dimension(this.getSize())).width-10,30));
 		pansyno.add(syno);
 
-		//Param�trage de l'affichage du panel symbole
 		pansymb.setLayout(new BoxLayout(pansymb, BoxLayout.LINE_AXIS));
 		pansymb.setPreferredSize(new Dimension((new Dimension(this.getSize())).width-10,30));
 		pansymb.add(symb);
 
-		//Param�trage de l'affichage du panel propri�t�s
 		panpropt.setLayout(new BoxLayout(panpropt,BoxLayout.LINE_AXIS));
 		panprop.setLayout(new BoxLayout(panprop,BoxLayout.PAGE_AXIS));
 		panprop1.setLayout(new BoxLayout(panprop1,BoxLayout.PAGE_AXIS));
 		panprop2.setLayout(new BoxLayout(panprop2,BoxLayout.PAGE_AXIS));
-		panMap.setLayout(new BoxLayout(panMap,BoxLayout.PAGE_AXIS));
-		//Ajout des items du menu au bandeau de menu de la fen�tre
+		
 		menu1.add(item1);
 		item1.addActionListener(new VisuAction());
-		//menu1.add(item2);
-		//item2.addActionListener(new ExecAction());
-		menu1.add(item3);
-		item3.addActionListener(new RempAction());
-		menu1.add(item4);
-		item4.addActionListener(new ControleAction());
 		menu1.add(item5);
 		item5.addActionListener(new CrossRefAction());
 		menuBar.add(menu1);
@@ -204,16 +168,10 @@ public class Fenetre extends JFrame {
 		item11.addActionListener(new ResearchAction());
 		menu2.add(item12);
 		item12.addActionListener(new SaRSimpleAction());
-		menu2.add(item13);
-		item13.addActionListener(new SaRMultiAction());
 		menuBar.add(menu2);
 		this.setJMenuBar(menuBar);
-
 		itemnav = 0;
 		accueil();
-		
-		//Affectation de panPrin au contenu de la fen�tre
-
 	}
 
 	private void accueil() {
@@ -236,11 +194,6 @@ public class Fenetre extends JFrame {
 		prop2.clear();
 	}
 
-	//Fonction getSymboles
-	//- Supprime le contenu des diff�rents panels pour mise � jour
-	//- Recherche les symboles du synoptique selectionn�
-	//- Appelle la fonction rempAction() si l'item3 du menu est selectionn�
-	//- Appelle la fonction getProperties() si l'item1 du menu est selectionn�
 	private void getSymboles() {
 		clearAll();
 		symb.removeAllItems();
@@ -250,19 +203,8 @@ public class Fenetre extends JFrame {
 		pansymb.repaint();
 		pansymb.revalidate();
 		if (itemnav == 1) getProperties();
-		if (itemnav == 3) {
-			rempAction();
-			mapAction();
-		}
 	}
 
-	//Fonction getProperties pour Menu 1
-	//- Supprime le contenu des diff�rents panels pour mise � jour
-	//- Recherche toutes les propri�t�s du smart symbole selectionn�
-	//- Ajoute le tag associ� au smart symbole au panel pour l'affichage
-	//- Ajoute les propri�t�s aux panels pour l'affichage
-	//- Set les param�tres des pannels
-	//- Mets � jour le panel principal
 	private void getProperties() {
 			clearAll();
 			prop1.add(new JTextField("Tag associe :"));
@@ -298,91 +240,10 @@ public class Fenetre extends JFrame {
 			reprintPanPrin(panMenu1);
 	}
 
-	//Fonction rempAction pour Menu 3
-	//- Supprime le contenu des diff�rents panels pour mise � jour
-	//- Ajoute trois colonnes avec les informations suivantes :
-	//		1- Le keyword et le nom de tous les symboles recenss� pour le synoptique selectionn�
-	//		2- Le tag associ� au smart symbol
-	//		3- Une colonne vide pour indiquer le nouveau tag du smart symbole (remplace alors le tag associ� par ce dernier)
-	private void rempAction() {
-			clearAll();
-			for(int i=0;i<synoptiques.get(syno.getSelectedIndex()).getNbSSIn();i++) {
-				prop1.add(new JTextField(synoptiques.get(syno.getSelectedIndex()).getSmartS(i).getKeyword() + " - " + synoptiques.get(syno.getSelectedIndex()).getSmartS(i).getName().toString()));
-				prop1.get(i).setEnabled(false);
-				prop1.get(i).setFont(font1);
-				prop1.get(i).setPreferredSize(new Dimension(2*((new Dimension(this.getSize())).width-10)/5,17));
-				panprop1.add(prop1.get(i));
-				prop.add(new JTextField(synoptiques.get(syno.getSelectedIndex()).getSmartS(i).getAssociatedTag()));
-				prop.get(i).setEnabled(false);
-				prop.get(i).setFont(font1);
-				prop.get(i).setPreferredSize(new Dimension((int)(1.5*((new Dimension(this.getSize())).width-10)/5),17));
-				panprop.add(prop.get(i));
-				prop2.add(new JTextField(synoptiques.get(syno.getSelectedIndex()).getSmartS(i).getChangedTag()));
-				prop2.get(i).setEnabled(true);
-				prop2.get(i).setFont(font1);
-				prop2.get(i).addFocusListener(new Surbrillance(i));
-				prop2.get(i).setPreferredSize(new Dimension((int)(1.5*((new Dimension(this.getSize())).width-10)/5),17));
-				panprop2.add(prop2.get(i));
-			}
-			panpropt.add(panprop1);
-			panpropt.add(panprop);
-			panpropt.add(panprop2);
-			reprintPanPrin(panMenu3);
-	}
-
-	private void mapAction() {
-		Point p = new Point((int)this.width-970, 0);
-		if(window.getX() != p.getX() || window.getY() != p.getY()) p = window.getLocation();
-		window.dispose();
-        window.pack();
-        window.add(synoptiques.get(syno.getSelectedIndex()).getControl());
-        window.setSize(970, 475);
-        window.setLocation(p);
-        window.setVisible(true);
-		reprintPanPrin(panMenu3);
-	}
-
 	private void getControle() {
-		//S�lection de la r�f�rence sur le synoptique Symboles Optimis�sV2 -> Ajouter aux param�tres
 		for(int i=0;i<this.synoptiques.size();i++) {
 				this.synoptiques.get(i).controlQuality(this.synoptiques.get(ref).getListeK(), this.synoptiques.get(ref).getListeC());
 		}
-		if (itemnav==4) showQualityBySyno();
-	}
-
-	private void showQualityBySyno() {
-		panMenu4.removeAll();
-		JTextArea textQuality = new JTextArea();
-		
-		textQuality.selectAll();
-		textQuality.replaceSelection("");
-		for (int i=0;i<this.synoptiques.size();i++) {
-			textQuality.append("\n" + this.synoptiques.get(i).getName().toString());
-			if(this.synoptiques.get(i).getListeInval().size()>0) {
-				for(int j=0;j<this.synoptiques.get(i).getListeInval().size();j++) textQuality.append(";" + this.synoptiques.get(i).getListeInval().get(j).toString());
-			}
-			else textQuality.append(";");
-		}
-		Date date = new Date();
-		String datej = sdf.format(date).toString().replaceAll(":", "_");
-		datej = datej.replaceAll("/", "_");
-		String fileName = "Controle_Qualite_" + datej + ".csv";
-        try {
-            FileWriter fileWriter = new FileWriter(this.cheminDestination + fileName, true);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            textQuality.selectAll();
-            bufferedWriter.write(textQuality.getSelectedText());
-            bufferedWriter.close();
-            JOptionPane.showMessageDialog(null, "Le fichier " + fileName + " a ete ajoute au dossier :\n" + this.cheminDestination, "Information", JOptionPane.INFORMATION_MESSAGE);
-        }
-        catch(IOException ex) {
-            System.out.println("Error writing to file '"+ fileName + "'");
-        }
-		JScrollPane panMenu4sc = new JScrollPane(textQuality);
-		panMenu4sc.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		panMenu4.setPreferredSize(new Dimension((int)this.getSize().width-10,(int)this.getSize().height-80));
-		panMenu4.add(panMenu4sc);
-		reprintPanPrin(panMenu4);
 	}
 
 	private void showComplete() {
@@ -442,15 +303,11 @@ public class Fenetre extends JFrame {
 
 	}
 
-	//Fonction execAction
-	//- Recherche les fichiers des synoptiques dans le chemin Source
-	//- Ajouter � la liste les nouveaux synoptiques
-	//- Effectue la recherche compl�te sur chacun des fichiers (smart symboles et propri�t�s associ�es pour chaque item)
-	//- En sortie, nous avons tous les objects Synoptique, Tag, SmartSymbol et Property n�cessaire � l'application
 	private void execAction() {
 		ObjectOutputStream oos;
 		ObjectInputStream ois;
-
+		JProgressBar pbar = new JProgressBar();
+		
 		findFilesRecursively(new File(cheminSource), all, ".gdfx");
 
 		for(File file11 : all){
@@ -458,7 +315,7 @@ public class Fenetre extends JFrame {
 		}
 		getControle();
 		
-		JProgressBar pbar = new JProgressBar();
+		
 		pbar.setMinimum(0);
 		pbar.setMaximum(this.synoptiques.size());
 		panMenu2.add(pbar);
@@ -495,22 +352,20 @@ public class Fenetre extends JFrame {
 					try {
 						listeExec.get(i).join();
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					listeExec.remove(i);
 				}
 			}
 		}
-		
 
 		try {
-			oos = new ObjectOutputStream( new BufferedOutputStream ( new FileOutputStream( new File(cheminSource + "backup_smarts.txt"))));
+			oos = new ObjectOutputStream( new BufferedOutputStream ( new FileOutputStream( new File(cheminSource + "_backup_smarts.txt"))));
 			for(int i =0;i<this.synoptiques.size();i++) {
 				oos.writeObject(this.synoptiques.get(i));
 			}
 			oos.close();
-			ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(new  File(cheminSource + "backup_smarts.txt"))));
+			ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(new  File(cheminSource + "_backup_smarts.txt"))));
 			for(int i=0;i<this.synoptiques.size();i++) {
 				try {
 					System.out.println(((Synoptique)ois.readObject()));
@@ -518,11 +373,10 @@ public class Fenetre extends JFrame {
 					e.printStackTrace();
 				}
 			}
+			ois.close();
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-
 	}
 	
 	private void Research(JPanel pan0) {
@@ -559,9 +413,12 @@ public class Fenetre extends JFrame {
 
 		JButton bouton = new JButton();
 		bouton.setPreferredSize(new Dimension(90,30));
+		JButton bouton1 = new JButton();
+		bouton1.setPreferredSize(new Dimension(90,30));
 		if(itemnav==12) bouton.setText("Rechercher & Remplacer");
 		else bouton.setText("Rechercher");
 		bouton.addActionListener(new RechercheAction());
+		bouton1.addActionListener(new RecherchePopUpAction());
 		
 		JPanel pan2 = new JPanel();
 		pan2.setLayout(new BoxLayout(pan2, BoxLayout.LINE_AXIS));
@@ -585,11 +442,77 @@ public class Fenetre extends JFrame {
 			pan0.add(check1);
 			pan0.add(check2);
 		}
-
+		
 		pan0.add(bouton);
+		if(itemnav==11) pan0.add(bouton1);
 		pan0.add(pan2);
 		pan0.add(panMenu2sc);
 		reprintPanPrin(pan0);
+	}
+	
+	class RecherchePopUpAction implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			if(new File(cheminSource + "/PopUp/").exists()) {
+				ArrayList<String> str = new ArrayList<String>();
+				findFilesRecursively(new File(cheminSource + "/PopUp/"),allPop,".gdfx");
+				int i = 0;
+				for(File file12 : allPop) {
+					str.add(file12.getName().toString());
+
+					System.out.println(str.get(i));
+					i++;
+				}
+				
+				textexec.selectAll();
+				textexec.setText("");
+				try {
+					//INIT
+					
+					Date date = new Date();
+					String datej = sdf.format(date).toString().replaceAll(":", "_");
+					datej = datej.replaceAll("/", "_");
+					String fileName = "Cross_References_PopUp_" + datej + ".csv";
+					FileWriter fileWriter;
+					fileWriter = new FileWriter(cheminDestination + fileName, true);
+					BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+					
+					//CONTROLES ET ECRITURE
+					for(File file11 : all){
+						i = 0;
+						String strb = "";
+						//System.out.println(file11.getName());
+						Path path = Paths.get(file11.getPath());
+						Charset charset = StandardCharsets.UTF_8;
+						String content = new String(Files.readAllBytes(path), charset);
+						for(File file12 : allPop) {
+							if(content.contains(file12.getName().substring(0, file12.getName().length()-5))) {
+								strb = str.get(i).toString();
+								str.remove(i);
+								str.add(i,strb.concat(";" + file11.getName().toString()));
+								System.out.println(str.get(i).toString());
+								//System.out.println("\t" + file12.getName());
+							}
+							i++;
+						}
+					}
+					
+					for(String stri : str) {
+						int j = StringUtils.countMatches(stri,";");
+						textexec.append(j + ";" + stri + "\n");
+					}
+					
+					textexec.selectAll();
+		            bufferedWriter.write(textexec.getSelectedText());
+		            
+					//FERMETURE
+					bufferedWriter.close();
+					JOptionPane.showMessageDialog(null, "Le fichier " + fileName + " a ete ajoute au dossier :\n" + cheminDestination, "Information", JOptionPane.INFORMATION_MESSAGE);
+				}
+				catch(IOException ex) {
+					System.out.println("Error writing to file");
+				}
+			}
+		}
 	}
 
 	class RechercheAction implements ActionListener{
@@ -613,7 +536,6 @@ public class Fenetre extends JFrame {
 								textexec.append(file11.getName() + "\n");
 							}
 						} catch (IOException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 					}
@@ -662,7 +584,6 @@ public class Fenetre extends JFrame {
 								textexec.setText("Aucune occurence trouvée");
 							}
 						} catch (IOException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 					}
@@ -707,30 +628,6 @@ public class Fenetre extends JFrame {
 		}
 	}
 
-	class Surbrillance implements FocusListener{
-		private int num;
-
-		public Surbrillance(int j) {
-			this.num = j;
-		}
-
-		public void focusGained(FocusEvent e) {
-			synoptiques.get(syno.getSelectedIndex()).repaintPoint(this.num,Color.GREEN);
-			window.revalidate();
-			window.repaint();
-		}
-
-		@Override
-		public void focusLost(FocusEvent e) {
-			synoptiques.get(syno.getSelectedIndex()).getSmartS(num).setChangedTag(prop2.get(num).getText());
-			if(!(synoptiques.get(syno.getSelectedIndex()).getSmartS(num).getChangedTag().toString().equals(""))) synoptiques.get(syno.getSelectedIndex()).repaintPoint(this.num,Color.YELLOW);
-			else synoptiques.get(syno.getSelectedIndex()).repaintPoint(this.num,Color.RED);
-			window.revalidate();
-			window.repaint();
-		}
-
-	}
-
 	//Listener sur l'item 1 du menu
 	//En fonction du menu appelant, ex�cute l'une ou l'autre des fonctions
 	class VisuAction implements ActionListener{
@@ -740,61 +637,15 @@ public class Fenetre extends JFrame {
 			panMenu0.setVisible(false);
 			panMenu1.setVisible(true);
 			panMenu2.setVisible(false);
-			panMenu3.setVisible(false);
-			panMenu4.setVisible(false);
 			panMenu5.setVisible(false);
 			panMenu11.setVisible(false);
 			panMenu12.setVisible(false);
-			panMenu13.setVisible(false);
 			panMenu1.setLayout(new BoxLayout(panMenu1,BoxLayout.PAGE_AXIS));
 			getSymboles();
 			panMenu1.add(pansyno);
 			panMenu1.add(pansymb);
 			panMenu1.add(panpropt);
 			reprintPanPrin(panMenu1);
-			setMenuColor();
-		}
-	}
-
-	//Listener sur l'item 3 du menu
-	//En fonction du menu appelant, ex�cute l'une ou l'autre des fonctions
-	class RempAction implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-			itemnav = 3;
-			menu1.setText(item3.getText());
-			panMenu0.setVisible(false);
-			panMenu1.setVisible(false);
-			panMenu2.setVisible(false);
-			panMenu3.setVisible(true);
-			panMenu4.setVisible(false);
-			panMenu5.setVisible(false);
-			panMenu11.setVisible(false);
-			panMenu12.setVisible(false);
-			panMenu13.setVisible(false);
-			panMenu3.setLayout(new BoxLayout(panMenu3,BoxLayout.PAGE_AXIS));
-			getSymboles();
-			panMenu3.add(pansyno);
-			panMenu3.add(panpropt);
-			reprintPanPrin(panMenu3);
-			setMenuColor();
-		}
-	}
-
-	class ControleAction implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-			itemnav = 4;
-			menu1.setText(item4.getText());
-			panMenu0.setVisible(false);
-			panMenu1.setVisible(false);
-			panMenu2.setVisible(false);
-			panMenu3.setVisible(false);
-			panMenu4.setVisible(true);
-			panMenu5.setVisible(false);
-			panMenu11.setVisible(false);
-			panMenu12.setVisible(false);
-			panMenu13.setVisible(false);
-			panMenu4.setLayout(new BoxLayout(panMenu4,BoxLayout.PAGE_AXIS));
-			getControle();
 			setMenuColor();
 		}
 	}
@@ -806,12 +657,9 @@ public class Fenetre extends JFrame {
 			panMenu0.setVisible(false);
 			panMenu1.setVisible(false);
 			panMenu2.setVisible(false);
-			panMenu3.setVisible(false);
-			panMenu4.setVisible(false);
 			panMenu5.setVisible(true);
 			panMenu11.setVisible(false);
 			panMenu12.setVisible(false);
-			panMenu13.setVisible(false);
 			panMenu5.setLayout(new BoxLayout(panMenu5,BoxLayout.PAGE_AXIS));
 			showComplete();
 			setMenuColor();
@@ -825,12 +673,9 @@ public class Fenetre extends JFrame {
 			panMenu0.setVisible(false);
 			panMenu1.setVisible(false);
 			panMenu2.setVisible(false);
-			panMenu3.setVisible(false);
-			panMenu4.setVisible(false);
 			panMenu5.setVisible(false);
 			panMenu11.setVisible(true);
 			panMenu12.setVisible(false);
-			panMenu13.setVisible(false);
 			panMenu11.setLayout(new BoxLayout(panMenu11,BoxLayout.PAGE_AXIS));
 			Research(panMenu11);
 			setMenuColor();
@@ -844,12 +689,9 @@ public class Fenetre extends JFrame {
 			panMenu0.setVisible(false);
 			panMenu1.setVisible(false);
 			panMenu2.setVisible(false);
-			panMenu3.setVisible(false);
-			panMenu4.setVisible(false);
 			panMenu5.setVisible(false);
 			panMenu11.setVisible(false);
 			panMenu12.setVisible(true);
-			panMenu13.setVisible(false);
 			panMenu12.setLayout(new BoxLayout(panMenu12,BoxLayout.PAGE_AXIS));
 			Research(panMenu12);
 			setMenuColor();
@@ -857,26 +699,6 @@ public class Fenetre extends JFrame {
 		}
 	}
 
-	class SaRMultiAction implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-			itemnav = 13;
-			menu2.setText(item13.getText());
-			panMenu0.setVisible(false);
-			panMenu1.setVisible(false);
-			panMenu2.setVisible(false);
-			panMenu3.setVisible(false);
-			panMenu4.setVisible(false);
-			panMenu5.setVisible(false);
-			panMenu11.setVisible(false);
-			panMenu12.setVisible(false);
-			panMenu13.setVisible(true);
-			panMenu13.setLayout(new BoxLayout(panMenu13,BoxLayout.PAGE_AXIS));
-			setMenuColor();
-
-
-		}
-	}
-	
 	public void setMenuColor() {
 		if (itemnav<10){
 			menu1.setForeground(Color.RED);
@@ -894,31 +716,7 @@ public class Fenetre extends JFrame {
 		panPrin.repaint();
 		panPrin.revalidate();
 	}
-	
-/*	class SharedListSelectionHandler implements ListSelectionListener {
-        public void valueChanged(ListSelectionEvent e) { 
-            ListSelectionModel lsm = (ListSelectionModel)e.getSource();
- 
-            int firstIndex = e.getFirstIndex();
-            int lastIndex = e.getLastIndex();
-            boolean isAdjusting = e.getValueIsAdjusting(); 
- 
-            if (lsm.isSelectionEmpty()) {
 
-            } else {
-                // Find out which indexes are selected.
-                int minIndex = lsm.getMinSelectionIndex();
-                int maxIndex = lsm.getMaxSelectionIndex();
-                for (int i = minIndex; i <= maxIndex; i++) {
-                    if (lsm.isSelectedIndex(i)) {
-
-                    }
-                }
-            }
-
-        }
-    }*/
-	
 	private static String readFileAsString(String filePath) throws java.io.IOException{
 
 		byte[] buffer = new byte[(int) new File(filePath).length()];
