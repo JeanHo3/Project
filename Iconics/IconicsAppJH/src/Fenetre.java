@@ -104,7 +104,7 @@ public class Fenetre extends JFrame {
 	private JTextField text5 = new JTextField();
 	private JCheckBox check1 = new JCheckBox();
 	private JCheckBox check2 = new JCheckBox();
-	
+
 	private List<ThreadExec> listeExec = new ArrayList<ThreadExec>();
 
     private int ref = 0;
@@ -114,8 +114,8 @@ public class Fenetre extends JFrame {
 		this.setSize(880,805);
 		this.setLocation(((int)width/2)-440, ((int)height/2)-402);
 		this.window.setLocation((int)width-970, 0);
-		int lio = chemin.lastIndexOf("/");
-		this.cheminDestination = chemin.substring(0,lio) + "/";
+		int lio = chemin.lastIndexOf("\\");
+		this.cheminDestination = chemin.substring(0,lio) + "\\";
 		this.cheminSource = (chemin);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -159,7 +159,7 @@ public class Fenetre extends JFrame {
 		panprop.setLayout(new BoxLayout(panprop,BoxLayout.PAGE_AXIS));
 		panprop1.setLayout(new BoxLayout(panprop1,BoxLayout.PAGE_AXIS));
 		panprop2.setLayout(new BoxLayout(panprop2,BoxLayout.PAGE_AXIS));
-		
+
 		menu1.add(item1);
 		item1.addActionListener(new VisuAction());
 		menu1.add(item5);
@@ -184,7 +184,7 @@ public class Fenetre extends JFrame {
 		reprintPanPrin(panMenu0);
 	}
 
-	//Fonction de nettoyage des panels et listes utilis�s
+	//Fonction de nettoyage des panels et listes utilisï¿½s
 	private void clearAll(){
 		panprop.removeAll();
 		panprop1.removeAll();
@@ -308,27 +308,27 @@ public class Fenetre extends JFrame {
 		ObjectOutputStream oos;
 		ObjectInputStream ois;
 		JProgressBar pbar = new JProgressBar();
-		
+
 		findFilesRecursively(new File(cheminSource), all, ".gdfx");
 
 		for(File file11 : all){
 			this.synoptiques.add(new Synoptique(file11.getName().substring(0, file11.getName().toString().length() - 5),file11.getAbsolutePath()));
 		}
 		getControle();
-		
-		
+
+
 		pbar.setMinimum(0);
 		pbar.setMaximum(this.synoptiques.size());
 		panMenu2.add(pbar);
 		reprintPanPrin(panMenu2);
-		
+
 		int j = 0;
 		while(j<this.synoptiques.size()) {
 			if(this.synoptiques.get(j).getName().toString().equals("Symboles OptimisesV2")) {
 				this.synoptiques.get(j).setReference(true);
 				this.ref = j;
 			}
-			
+
 			if (listeExec.size()<4) {
 				listeExec.add(this.synoptiques.get(j).alternativeFindSmart());
 				pbar.setValue(j);
@@ -379,7 +379,7 @@ public class Fenetre extends JFrame {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void Research(JPanel pan0) {
 		pan0.removeAll();
 		JScrollPane panMenu2sc = new JScrollPane(textexec);
@@ -420,7 +420,7 @@ public class Fenetre extends JFrame {
 		else bouton.setText("Rechercher");
 		bouton.addActionListener(new RechercheAction());
 		bouton1.addActionListener(new RecherchePopUpAction());
-		
+
 		JPanel pan2 = new JPanel();
 		pan2.setLayout(new BoxLayout(pan2, BoxLayout.LINE_AXIS));
 		if(itemnav == 11) pan2.setPreferredSize((new Dimension((int)this.getSize().width-10,(int)this.getSize().height-550)));
@@ -443,31 +443,47 @@ public class Fenetre extends JFrame {
 			pan0.add(check1);
 			pan0.add(check2);
 		}
-		
+
 		pan0.add(bouton);
 		if(itemnav==11) pan0.add(bouton1);
 		pan0.add(pan2);
 		pan0.add(panMenu2sc);
 		reprintPanPrin(pan0);
 	}
-	
+
 	class RecherchePopUpAction implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			if(new File(cheminSource + "/PopUp/").exists()) {
 				ArrayList<String> str = new ArrayList<String>();
+				ArrayList<String> str1 = new ArrayList<String>();
 				ArrayList<String> listePop = new ArrayList<String>();
 				findFilesRecursively(new File(cheminSource + "/PopUp/"),allPop,".gdfx");
 				int i = 0;
 				for(File file12 : allPop) {
 					listePop.add(file12.getName().toString());
 					str.add(file12.getName().toString());
+					str1.add(file12.getName().toString().substring(0,file12.getName().length()-5).toLowerCase());
 				}
-				
+
+				for(Synoptique syn : synoptiques) {
+					for(SmartSymbol sym : syn.getListeSS()) {
+						for(Property pro : sym.getListProperty()) {
+							if(pro.getName().toString().contains("PopUp")){
+								if(!(pro.getValue().toString().isEmpty()) && !(str1.contains(pro.getValue().toString().toLowerCase()))) {
+									if(pro.getValue() != "{x:Null}" && pro.getValue().contains("_")) {
+										System.out.println(syn.getName() + " -> " + pro.getValue() + " sur symbole " + sym.getName() + ", SK = " + sym.getKeyword());
+									}
+								}
+							}
+						}
+					}
+				}
+
 				textexec.selectAll();
 				textexec.setText("");
 				try {
 					//INIT
-					
+
 					Date date = new Date();
 					String datej = sdf.format(date).toString().replaceAll(":", "_");
 					datej = datej.replaceAll("/", "_");
@@ -475,7 +491,7 @@ public class Fenetre extends JFrame {
 					FileWriter fileWriter;
 					fileWriter = new FileWriter(cheminDestination + fileName, true);
 					BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-					
+
 					//CONTROLES ET ECRITURE
 					for(File file11 : all){
 						i = 0;
@@ -489,15 +505,15 @@ public class Fenetre extends JFrame {
 							i++;
 						}
 					}
-					
+
 					for(String stri : str) {
 						int j = StringUtils.countMatches(stri,";");
 						textexec.append(j + ";" + stri + "\n");
 					}
-					
+
 					textexec.selectAll();
 		            bufferedWriter.write(textexec.getSelectedText());
-		            
+
 					//FERMETURE
 					bufferedWriter.close();
 					JOptionPane.showMessageDialog(null, "Le fichier " + fileName + " a ete ajoute au dossier :\n" + cheminDestination, "Information", JOptionPane.INFORMATION_MESSAGE);
@@ -520,7 +536,7 @@ public class Fenetre extends JFrame {
 			textexec.setText("");
 			if(itemnav == 11) {
 				if(text.getText().isEmpty() == true) {
-					JOptionPane.showMessageDialog(null, "Saisissez un texte à rechercher.", "Information", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Saisissez un texte Ã  rechercher.", "Information", JOptionPane.ERROR_MESSAGE);
 				}
 				else {
 					for(File file11 : all){
@@ -568,25 +584,25 @@ public class Fenetre extends JFrame {
 								if(start == 0 && reponse == 0)
 								{
 										content = content.replaceAll(text.getText(), text5.getText());
-										Files.write(path, content.getBytes(charset));	
-										textexec.append(file11.getName() + " modifié.\n");
+										Files.write(path, content.getBytes(charset));
+										textexec.append(file11.getName() + " modifiÃ©.\n");
 										modif++;
 								}
 							}
 							else if (content.contains(text.getText()) == false && modif == 0) {
 								textexec.selectAll();
-								textexec.setText("Aucune occurence trouvée");
+								textexec.setText("Aucune occurence trouvÃ©e");
 							}
 						} catch (IOException e1) {
 							e1.printStackTrace();
 						}
 					}
 				}
-				
+
 			}
 		}
 	}
-	
+
 	class StateListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			if(check1.isSelected()) {
@@ -605,7 +621,7 @@ public class Fenetre extends JFrame {
 	}
 
 	//Listener sur la ComboBox listant les synoptiques
-	//En fonction du menu appelant, ex�cute l'une ou l'autre des fonctions
+	//En fonction du menu appelant, exï¿½cute l'une ou l'autre des fonctions
 	class SynoAction implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			getSymboles();
@@ -613,7 +629,7 @@ public class Fenetre extends JFrame {
 	}
 
 	//Listener sur la ComboBox listant les smart symboles
-	//Execute la fonction getProperties uniquement si item 1 du menu en s�lection active
+	//Execute la fonction getProperties uniquement si item 1 du menu en sï¿½lection active
 	class SmartAction implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			if(!(symb.getItemCount()==0)) {
@@ -623,7 +639,7 @@ public class Fenetre extends JFrame {
 	}
 
 	//Listener sur l'item 1 du menu
-	//En fonction du menu appelant, ex�cute l'une ou l'autre des fonctions
+	//En fonction du menu appelant, exï¿½cute l'une ou l'autre des fonctions
 	class VisuAction implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			itemnav = 1;
@@ -659,7 +675,7 @@ public class Fenetre extends JFrame {
 			setMenuColor();
 		}
 	}
-	
+
 	class ResearchAction implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			itemnav = 11;
@@ -726,7 +742,7 @@ public class Fenetre extends JFrame {
 	}
 
 	//Fonction findFilesRecursively
-	//- Recherche selon une m�thode r�cursive tous les fichiers .gdfx contenu dans le rep�rtoire cheminSource
+	//- Recherche selon une mï¿½thode rï¿½cursive tous les fichiers .gdfx contenu dans le repï¿½rtoire cheminSource
 	private static void findFilesRecursively(File file, Collection<File> all, final String extension) {
 		//Liste des fichiers correspondant a l'extension souhaitee
 		final File[] children = file.listFiles(new FileFilter() {
